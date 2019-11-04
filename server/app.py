@@ -1,30 +1,28 @@
-from flask import Flask, render_template, jsonify
+import os
+from flask import Flask, render_template
+from PodcastAPI import podcast_api, Podcast
+from sql_alchemy_db_instance import db
 
-subscriptions = ['Crime Junkie', 'Swindled', 'The Dollop']
+project_dir = os.path.dirname(os.path.abspath(__file__))
+project_paths = project_dir.split("/")
+project_paths.pop()
+project_paths.append('db')
+project_dir = "/".join(project_paths)
 
-app = Flask(__name__,
-    static_folder = "./dist/static",
-    template_folder = "./dist"
-)
 
-@app.route('/')
-def index():
-    """
-    Serve Vue App
-    """
-    return (render_template('index.html'))
+def create_app(): 
+    app = Flask(__name__,
+        static_folder = "./dist/static",
+        template_folder = "./dist"
+    )
+    app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///{}".format(os.path.join(project_dir, "podcast.db"))
+    app.config['SQLALCHEMY_ECHO'] = True
+    db.init_app(app)
+    app.register_blueprint(podcast_api)
 
-@app.route('/subscriptions', methods=['GET'])
-def serve_all_subscriptions():
-    return jsonify({'items': subscriptions})
+    return app
 
-@app.after_request
-def add_header(req):
-    """
-    Clear Cache for hot-reloading
-    """
-    req.headers["Cache-Control"] = "no-cache"
-    return req
-
-if __name__ == "__main__":
-    app.run(debug=True)
+def setup_database(app):
+    with app.app_context():
+        db.create_all()
+        # db.drop_all()
