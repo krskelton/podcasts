@@ -53,4 +53,23 @@ button.button {
     height: 40px;
     color: #fff;
     font-size: 15px;
+    display:block;
+}
+.player {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+.search {
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+}
+.search input {
+    font-size: 20px;
+    height: 35px;
+}
+.search .button {
+    display: inline-block;
+    margin-left: 10px;
 }

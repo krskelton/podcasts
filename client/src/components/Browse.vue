@@ -2,7 +2,7 @@
     <div class="categories">
         <h2>Browse Top Podcasts by Category</h2>
         <ul v-if="!viewTopList">
-            <!--TODO: Add categories with bulk upload from database then loop through list to get ids from database-->
+            <!--IDEA: Add categories with bulk upload from database then loop through list to get ids from database-->
             <!--Add +/- icon to make menu show and hide the submenu-->
             <li @click="getTopTenList('1301')">Arts</li>
                 <ul>
@@ -49,7 +49,6 @@
                 </ul> 
         </ul>
         <ol v-if="viewTopList">
-            <!--TODO: when the user clicks on the name they are taken to the rss feed of that podcast-->
             <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label)">{{topTenPodcast['im:name'].label}}</li>
         </ol>
     </div>
@@ -67,6 +66,7 @@ export default {
         }        
     },
     methods: {
+        //getTopTenList passes the id from clicking on the list above of the category. This id is added to an itunes url to make an axios get request. The data received from the json reponse contains the top ten list for the category.
         getTopTenList(id){
             axios.get('https://itunes.apple.com/us/rss/toppodcasts/genre=' + id + '/json')
             .then((data) => {
@@ -74,16 +74,16 @@ export default {
                 this.viewTopList = true;
             })
         },
-        //Since the json return of the above response does not have a feedUrl as a variable, the id needs to be parsed out of the url and send to a different itunes api call that will return the feedUrl. The feedUrl is what returns the list of episodes.
+        //Since the json data in the above response does not return a feedUrl as a variable, the id needs to be parsed out of the url and sent to a different itunes api call that will return the feedUrl. The feedUrl is important because it's what returns the list of episodes.
         getRSS(url, name){
             var match = url.match(/id(\d+)/)
             if (match) var podID = match[1];
             else var podID = url.match(/\d+/);
 
-            axios.get('https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
+            axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
             .then((data) => {
                 this.podcastFeedUrl = data.data.results[0].feedUrl;
-                //send data to parent component
+                //this.$emit sends the data to parent component
                 this.$emit('feedFromBrowse', this.podcastFeedUrl, name);
             })
         }

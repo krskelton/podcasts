@@ -2,7 +2,6 @@
   <div class="subscriptions">
     <h2>Subscriptions</h2>
     <ul>
-        <!--TODO: Add link to Podcast.vue version of individual podcasts that lists the RSS feed-->
         <li v-for="(subscription, index) in subscriptions" v-bind:key="subscription.id" @click="sendFeedtoParent(subscription.rss_feed_url, subscription.name)"><span>{{ subscription.name }}</span> <button class="button" @click="removeSubscription(subscription.id)">Unsubscribe</button></li>
     </ul>
   </div>
@@ -20,18 +19,21 @@ export default {
     }
   },
   methods:{
-    //put getSubsciptions in the parent component so two child components can use
+    //Get subscriptions from the database
     getSubscriptions(){
       axios.get('/subscriptions').then(res => this.subscriptions = res.data.name);
     },
+    //Remove a subsciption from the database
     removeSubscription(id){
       axios.patch('/subscription', {id : id})
       .then(() => this.getSubscriptions());
     },
+    //this.$emit sends the data to parent component
     sendFeedtoParent(url, name){
       this.$emit('feedFromSubscription', url, name);
     }
   },
+  //getSubscriptions is mounted so it will load when the Subscriptions component becomes visible
   mounted() {
     this.getSubscriptions();
   }

@@ -1,10 +1,10 @@
 <template>
   <div class="episodes">
     <h2>{{podcastName}}</h2>
-    <!--TODO: add conditional so that subscribe button is disabled if you are already subscribed to that podcast-->
+    <!--IDEA: add conditional so that subscribe button is disabled if you are already subscribed to that podcast-->
+    <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
     <button class="button" @click="subscribeToPodcast()">Subscribe</button>
     <ul v-if="!play">
-      <!--get list of podcast episodes-->
       <li v-for="(episode, index) in episodeList" v-bind:key="index" @click="playEpisode(episode.title, episode.enclosure.url)">
           <div>
               <h3>{{episode.title}}</h3>
@@ -12,12 +12,13 @@
           </div>
       </li>
     </ul>
+    <!--The player includes a button to show all the episodes again, tbe title of the episode and a simple html audio player with the mp3 file passed to it.-->
     <div class="player" v-if="play">
-      <button @click="getRSSFeed(feedURL)">Return to episodes</button>
       <p><strong>{{episodeTitle}}</strong></p>
       <audio controls>
         <source :src="musicFile" type="audio/mpeg">
       </audio>
+      <button class="button" style="margin: 20px auto;"@click="getRSSFeed(feedURL)">Return to episodes</button>
     </div>
   </div>
   
@@ -29,10 +30,10 @@ let Parser = require('rss-parser');
 
 export default {
   name: 'Podcast',
+  //The podcastName and feedURL are passed as props from the parent component app.vue
   props: {
     podcastName: String,
     feedURL: String,
-    // podID: Number,
   },
   data() {
     return {
@@ -43,39 +44,34 @@ export default {
     }
   },
   methods:{
+    //subscribeToPodcast adds the podcast to the database
     subscribeToPodcast(){
-      //add podcast to the database
-      //TODO: add podcast id and rss feed to database so I can pull the link from the subscription tab
       axios.post('/subscription', {name: this.podcastName, rss_feed_url: this.feedURL})
-      
     },
+    //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
     getRSSFeed(RSSFEED){
-      // Note: some RSS feeds can't be loaded in the browser due to CORS security.
-      // To get around this, you can use a proxy.
-      const CORS_PROXY = "https://cors-anywhere.herokuapp.com/"
-      
-      let parser = new Parser();
-      parser.parseURL(CORS_PROXY + RSSFEED, (err, feed) => {
-        console.log(CORS_PROXY + RSSFEED);
-        // if (err) throw err;
-        console.log(feed);
-        this.episodeList = feed.items;
-        this.play = false;
+      axios.post('/itunes-api', {rss_feed: RSSFEED})
+      .then((data)=>{
+          let parser = new Parser();
+           parser.parseString(data.data, (err, feed) => {
+             if (err) throw err;
+            this.episodeList = feed.items;
+            this.play = false;
+           });
       })
+      
     },
+    //playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
     playEpisode(title, mp3){
       this.episodeTitle = title;
       this.musicFile = mp3;
       this.play = true;
     } 
   },
+  //getRSSFeed is mounted so it will load when the Podcast component becomes visible
   mounted(){
     this.getRSSFeed(this.feedURL);
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
