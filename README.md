@@ -22,7 +22,7 @@ Users of the Podcast app can search for a podcast, browse top ten categories bas
 2.	Install Dependencies (see [Installing Dependencies](https://github.com/krskelton/podcasts#installing-dependencies) for details)
 3.	Create an AWS account and add an RDS database instance. (see [Configuring the Database](https://github.com/krskelton/podcasts#configuring-the-database) for details on setup)
 4.	Create .env file to contain database information in the Server file (see [Environment Variable Configuration](https://github.com/krskelton/podcasts#environment-variable-configuration) for details).
-5.	Run the app. (See [Running Locally](https://github.com/krskelton/podcasts#running-locally) for details)
+5.	Run the app. (see [Running Locally](https://github.com/krskelton/podcasts#running-locally) for details)
 
 ### Prerequisites
 - NodeJS v10.16.3
@@ -33,9 +33,11 @@ Users of the Podcast app can search for a podcast, browse top ten categories bas
 
 ### Installing Dependencies
 Navigate into the Client folder and install npm.
+
 ```npm install```
 
 Navigate into the Server folder and install pipenv.
+
 ```pipenv install```
 
 ## Deployment Configuration 
