@@ -19,10 +19,10 @@ Users of the Podcast app can search for a podcast, browse top ten categories bas
 ## Installation
 ### Getting Started
 1.	Fork the github repo
-2.	Install Dependencies (see Installing Dependencies for details)
-3.	Create an AWS account and add an RDS database instance. (see Configuring the Database for details on setup)
-4.	Create .env file to contain database information in the Server file (see Environment Variable Configuration for details).
-5.	Run the app. (See Running Locally)
+2.	Install Dependencies (see [Installing Dependencies](https://github.com/krskelton/podcasts#installing-dependencies) for details)
+3.	Create an AWS account and add an RDS database instance. (see [Configuring the Database](https://github.com/krskelton/podcasts#configuring-the-database) for details on setup)
+4.	Create .env file to contain database information in the Server file (see [Environment Variable Configuration](https://github.com/krskelton/podcasts#environment-variable-configuration) for details).
+5.	Run the app. (See [Running Locally](https://github.com/krskelton/podcasts#running-locally) for details)
 
 ### Prerequisites
 - NodeJS v10.16.3
@@ -33,11 +33,10 @@ Users of the Podcast app can search for a podcast, browse top ten categories bas
 
 ### Installing Dependencies
 Navigate into the Client folder and install npm.
-npm install
+```npm install```
 
 Navigate into the Server folder and install pipenv.
-pipenv install
-
+```pipenv install```
 
 ## Deployment Configuration 
 ### Configuring the Database 
@@ -61,9 +60,9 @@ RUN_ENVIRONMENT=‘insert your data'
 ### Running Locally 
 - In a terminal window open two tabs:
   - In one tab, navigate into the Client folder and enter:
-    - npm run build
+    - ```npm run build ```
   - In the other tab, navigate into the Server folder and enter:
-    - pipenv run python main.py
+    - ```pipenv run python main.py```
  - Navigate to https://localhost:5000/ on your browser
 
 ## Caveats and Good-To-Knows 
