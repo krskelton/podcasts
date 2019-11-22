@@ -10,11 +10,14 @@ class Users(db.Model):
 class Podcasts(db.Model):
     # we want to change the name of this table
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(2000))
-    rss_url = db.Column(db.String(2000), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    name = db.Column(db.String(500))
+    rss_feed_url = db.Column(db.String(2000))
+    podcast_API_id = db.Column(db.Integer)
 
 class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
 class PlaylistItems(db.Model):
