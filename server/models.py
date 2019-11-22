@@ -11,5 +11,5 @@ class Subscriptions(db.Model):
     rss_url = db.Column(db.String(2000), nullable=False)
 
 class Favorites(db.Model)
-
+    
 
