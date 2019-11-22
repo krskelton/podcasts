@@ -22,7 +22,7 @@ class Playlists(db.Model):
 
 class PlaylistItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    playlist_id = db.Column(db.Integer, db.ForeignKey("playlist.id"))
+    playlist_id = db.Column(db.Integer, db.ForeignKey("playlists.id"))
     podcast_API_id = db.Column(db.Integer)
     episode_id = db.Column(db.Integer)
 
