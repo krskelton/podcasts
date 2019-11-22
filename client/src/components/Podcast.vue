@@ -52,6 +52,7 @@ export default {
     getRSSFeed(RSSFEED){
       axios.post('/itunes-api', {rss_feed: RSSFEED})
       .then((data)=>{
+        console.log(data);
           let parser = new Parser();
            parser.parseString(data.data, (err, feed) => {
              if (err) throw err;
