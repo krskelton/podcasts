@@ -2,6 +2,7 @@
   <div id="app">
     <button @click="showRegister">Register</button>
     <button @click="showLogin">Login</button>
+    <button @click="logout">Log Out</button>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg">
     <h1>Podcasts</h1>
     <nav>
@@ -30,6 +31,8 @@ import Podcast from './components/Podcast.vue'
 import Register from './components/Register.vue'
 import Login from './components/Login.vue'
 
+import axios from 'axios';
+
 export default {
   name: 'app',
   data() {
@@ -43,6 +46,8 @@ export default {
 
       podcastName: '',
       podcastFeedURL: '',
+
+      loggedIn: false
     }
   },
   methods: {
@@ -114,6 +119,11 @@ export default {
       this.viewPodcast = false;
       this.viewRegister = false;
       this.viewLogin = false;
+    },
+    logout(){
+      axios.post('/logout');
+      this.loggedIn = false;
+
     }
   },
   components: {
