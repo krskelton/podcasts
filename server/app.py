@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template
 from PodcastAPI import podcast_api, Podcast
+from usersAPI import users_api
 from sql_alchemy_db_instance import db
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -15,6 +16,7 @@ def create_app():
         static_folder = "./dist/static",
         template_folder = "./dist"
     )
+    app.secret_key = os.environ["SECRET_KEY"]
     if os.environ["RUN_ENVIRONMENT"] == 'network':
         app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://{user}:{pw}@{url}/{db}".format(user=os.environ["DB_USER"],pw=os.environ["DB_PASS"],url=os.environ["DB_URL"],db=os.environ["DB_NAME"])
     else:
@@ -22,6 +24,7 @@ def create_app():
     app.config['SQLALCHEMY_ECHO'] = True
     db.init_app(app)
     app.register_blueprint(podcast_api)
+    app.register_blueprint(users_api)
 
     return app
 
