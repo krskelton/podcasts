@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <button @click="showRegister">Register</button>
+    <button @click="showLogin">Login</button>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg">
     <h1>Podcasts</h1>
     <nav>
@@ -9,6 +11,8 @@
     </nav>
     <div id="content">
       <!--If the parent receives data from the child it will have @feedfrom[nameofchild]. This is passing the podcast name and feed url to the parent so the parent can pass it to the podcast.vue child component since child components can't pass data directly to each other.-->
+      <Register v-if="viewRegister" />
+      <Login v-if="viewLogin" />
       <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved"/>
       <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved"/>
       <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/>
@@ -32,6 +36,8 @@ export default {
       viewSearch: false,
       viewBrowse: false,
       viewPodcast: false,
+      viewRegister: false,
+      viewLogin: false,
 
       podcastName: '',
       podcastFeedURL: '',
@@ -44,31 +50,59 @@ export default {
         this.podcastFeedURL = feedurl;
         this.viewSearch = false;
         this.viewPodcast = true;
+        this.viewRegister = false;
+        this.viewLogin = false;
     },
     browseFeedRecieved(feedurl2, podcastname2){
         this.podcastName = podcastname2;
         this.podcastFeedURL = feedurl2;
         this.viewBrowse = false;
         this.viewPodcast = true;
+        this.viewRegister = false;
+        this.viewLogin = false;
     },
     subscriptionFeedRecieved(feedurl3, podcastname3){
         this.podcastName = podcastname3;
         this.podcastFeedURL = feedurl3;
         this.viewSubscriptions = false;
         this.viewPodcast = true;
+        this.viewRegister = false;
+        this.viewLogin = false;
     },
     //The methods below simply show components and hide others when the user clicks on elements of the page.
+    showRegister(){
+      this.viewSubscriptions = false;
+      this.viewSearch = false;
+      this.viewBrowse = false;
+      this.viewPodcast = false;
+      this.viewRegister = true;
+      this.viewLogin = false;
+
+    },
+    showLogin(){
+      this.viewSubscriptions = false;
+      this.viewSearch = false;
+      this.viewBrowse = false;
+      this.viewPodcast = false;
+      this.viewRegister = false;
+      this.viewLogin = true;
+
+    },
     showSubscriptions(){
       this.viewSubscriptions = true;
       this.viewSearch = false;
       this.viewBrowse = false;
       this.viewPodcast = false;
+      this.viewRegister = false;
+      this.viewLogin = false;
     },
     showSearch(){
       this.viewSubscriptions = false;
       this.viewSearch = true;
       this.viewBrowse = false;
       this.viewPodcast = false;
+      this.viewRegister = false;
+      this.viewLogin = false;
       
     },
     showBrowse(){
@@ -76,6 +110,8 @@ export default {
       this.viewSearch = false;
       this.viewBrowse = true;
       this.viewPodcast = false;
+      this.viewRegister = false;
+      this.viewLogin = false;
     }
   },
   components: {
