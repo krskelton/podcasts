@@ -27,6 +27,8 @@ import Subscriptions from './components/Subscriptions.vue'
 import SearchResults from './components/SearchResults.vue'
 import Browse from './components/Browse.vue'
 import Podcast from './components/Podcast.vue'
+import Register from './components/Register.vue'
+import Login from './components/Login.vue'
 
 export default {
   name: 'app',
@@ -118,7 +120,9 @@ export default {
     Subscriptions,
     Browse,
     SearchResults, 
-    Podcast
+    Podcast,
+    Register,
+    Login
   }
   
 }
