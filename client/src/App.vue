@@ -1,17 +1,18 @@
 <template>
   <div id="app">
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg">
+    <router-view></router-view>
     <h1>Podcasts</h1>
     <nav>
-      <button @click="showSubscriptions"><img class="icon" src="./assets/images/my-list.png"/></button>
-      <button @click="showSearch"><img class="icon" src="./assets/images/search.png"/></button>
-      <button @click="showBrowse"><img class="icon" src="./assets/images/browse.png"/></button>
+      <router-link to="/subscriptions"><img class="icon" src="./assets/images/my-list.png"/></router-link>
+      <router-link to="/searchresults"><img class="icon" src="./assets/images/search.png"/></router-link>
+      <router-link to="/browse"><img class="icon" src="./assets/images/browse.png"/></router-link>
     </nav>
     <div id="content">
       <!--If the parent receives data from the child it will have @feedfrom[nameofchild]. This is passing the podcast name and feed url to the parent so the parent can pass it to the podcast.vue child component since child components can't pass data directly to each other.-->
       <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved"/>
       <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved"/>
-      <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/>
+      <!-- <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/> -->
       <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" />
     </div>
   </div>
