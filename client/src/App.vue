@@ -4,6 +4,8 @@
     <h1>Podcasts</h1>
     <div id="content">
       <!--If the parent receives data from the child it will have @feedfrom[nameofchild]. This is passing the podcast name and feed url to the parent so the parent can pass it to the podcast.vue child component since child components can't pass data directly to each other.-->
+      <Register v-if="viewRegister" />
+      <Login v-if="viewLogin" />
       <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved" />
       <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved" />
       <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved" />
@@ -29,11 +31,15 @@
 
 
 <script>
-import Subscriptions from "./components/Subscriptions.vue";
-import SearchResults from "./components/SearchResults.vue";
-import Browse from "./components/Browse.vue";
-import Podcast from "./components/Podcast.vue";
 import History from "./components/History.vue";
+import Subscriptions from './components/Subscriptions.vue'
+import SearchResults from './components/SearchResults.vue'
+import Browse from './components/Browse.vue'
+import Podcast from './components/Podcast.vue'
+import Register from './components/Register.vue'
+import Login from './components/Login.vue'
+
+import axios from 'axios';
 
 export default {
   name: "app",
@@ -44,8 +50,12 @@ export default {
       viewBrowse: false,
       viewPodcast: false,
       viewHistory: false,
+      viewRegister: false,
+      viewLogin: false,
       podcastName: "",
-      podcastFeedURL: ""
+      podcastFeedURL: "",
+
+      loggedIn: false
     };
   },
   methods: {
@@ -55,26 +65,93 @@ export default {
       this.podcastFeedURL = feedurl;
       this.viewSearch = false;
       this.viewPodcast = true;
+      this.viewRegister = false;
+      this.viewLogin = false;
+      this.viewHistory = false
     },
     browseFeedRecieved(feedurl2, podcastname2) {
       this.podcastName = podcastname2;
       this.podcastFeedURL = feedurl2;
       this.viewBrowse = false;
       this.viewPodcast = true;
+      this.viewRegister = false;
+      this.viewLogin = false;
+      this.viewHistory = false
     },
     subscriptionFeedRecieved(feedurl3, podcastname3) {
       this.podcastName = podcastname3;
       this.podcastFeedURL = feedurl3;
       this.viewSubscriptions = false;
       this.viewPodcast = true;
+      this.viewRegister = false;
+      this.viewLogin = false;
+      this.viewHistory = false
     },
     //The methods below simply show components and hide others when the user clicks on elements of the page.
     showSubscriptions() {
+      viewRegister: false,
+      viewLogin: false,
+
+      podcastName: '',
+      podcastFeedURL: '',
+
+      loggedIn: false
+    }
+  },
+  methods: {
+    //The feedRecieved methods get the feed url and podcast name from the SearchResults, Browse and Subscription components. They set the podcastName and podcastFeedURL from the data() above so that app.vue can pass those variables to podcast.vue.
+    searchFeedRecieved(feedurl, podcastname){
+        this.podcastName = podcastname;
+        this.podcastFeedURL = feedurl;
+        this.viewSearch = false;
+        this.viewPodcast = true;
+        this.viewRegister = false;
+        this.viewLogin = false;
+    },
+    browseFeedRecieved(feedurl2, podcastname2){
+        this.podcastName = podcastname2;
+        this.podcastFeedURL = feedurl2;
+        this.viewBrowse = false;
+        this.viewPodcast = true;
+        this.viewRegister = false;
+        this.viewLogin = false;
+    },
+    subscriptionFeedRecieved(feedurl3, podcastname3){
+        this.podcastName = podcastname3;
+        this.podcastFeedURL = feedurl3;
+        this.viewSubscriptions = false;
+        this.viewPodcast = true;
+        this.viewRegister = false;
+        this.viewLogin = false;
+    },
+    //The methods below simply show components and hide others when the user clicks on elements of the page.
+    showRegister(){
+      this.viewSubscriptions = false;
+      this.viewSearch = false;
+      this.viewBrowse = false;
+      this.viewPodcast = false;
+      this.viewRegister = true;
+      this.viewLogin = false;
+
+    },
+    showLogin(){
+      this.viewSubscriptions = false;
+      this.viewSearch = false;
+      this.viewBrowse = false;
+      this.viewPodcast = false;
+      this.viewRegister = false;
+      this.viewLogin = true;
+      this.viewHistory = false;
+
+    },
+    showSubscriptions(){
       this.viewSubscriptions = true;
       this.viewSearch = false;
       this.viewBrowse = false;
       this.viewPodcast = false;
       this.viewHistory = false;
+      this.viewRegister = false;
+      this.viewLogin = false;
     },
     showSearch() {
       this.viewSubscriptions = false;
@@ -82,6 +159,9 @@ export default {
       this.viewBrowse = false;
       this.viewPodcast = false;
       this.viewHistory = false;
+      this.viewRegister = false;
+      this.viewLogin = false;
+      
     },
     showBrowse() {
       this.viewSubscriptions = false;
@@ -96,6 +176,13 @@ export default {
       this.viewBrowse = false;
       this.viewPodcast = false;
       this.viewHistory = true;
+      this.viewRegister = false;
+      this.viewLogin = false;
+    },
+    logout(){
+      axios.post('/logout');
+      this.loggedIn = false;
+
     }
   },
   components: {
@@ -103,7 +190,10 @@ export default {
     Browse,
     SearchResults,
     Podcast,
-    History
+    History, 
+    Podcast,
+    Register,
+    Login
   }
 };
 </script>
