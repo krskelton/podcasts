@@ -12,4 +12,5 @@ def show_my_history():
     my_podcast_history = db.session.query(History).all()
     podcast_items_in_history = [{"id": history.id, "user_id": history.user_id,
                                  "episode_id": history.episode_id} for podcast in my_podcast_history]
-    return jsonify({"name": podcast_items_in_history})
+    return jsonify({"episode_clicked_on": podcast_items_in_history})
+# do i need to hit API or only need to query db to find if user has touched an item?

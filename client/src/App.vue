@@ -2,6 +2,14 @@
   <div id="app">
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <h1>Podcasts</h1>
+    <div id="content">
+      <!--If the parent receives data from the child it will have @feedfrom[nameofchild]. This is passing the podcast name and feed url to the parent so the parent can pass it to the podcast.vue child component since child components can't pass data directly to each other.-->
+      <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved" />
+      <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved" />
+      <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved" />
+      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" />
+      <History v-if="viewHistory" />
+    </div>
     <nav>
       <button @click="showSubscriptions">
         <img class="icon" src="./assets/images/my-list.png" />
@@ -16,14 +24,6 @@
         <img class="icon" src="./assets/images/my_history.png" />
       </button>
     </nav>
-    <div id="content">
-      <!--If the parent receives data from the child it will have @feedfrom[nameofchild]. This is passing the podcast name and feed url to the parent so the parent can pass it to the podcast.vue child component since child components can't pass data directly to each other.-->
-      <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved" />
-      <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved" />
-      <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved" />
-      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" />
-      <History v-if="viewHistory" />
-    </div>
   </div>
 </template>
 
@@ -74,24 +74,28 @@ export default {
       this.viewSearch = false;
       this.viewBrowse = false;
       this.viewPodcast = false;
+      this.viewHistory = false;
     },
     showSearch() {
       this.viewSubscriptions = false;
       this.viewSearch = true;
       this.viewBrowse = false;
       this.viewPodcast = false;
+      this.viewHistory = false;
     },
     showBrowse() {
       this.viewSubscriptions = false;
       this.viewSearch = false;
       this.viewBrowse = true;
       this.viewPodcast = false;
+      this.viewHistory = false;
     },
     showHistory() {
       this.viewSubscriptions = false;
       this.viewSearch = false;
-      this.viewBrowse = true;
+      this.viewBrowse = false;
       this.viewPodcast = false;
+      this.viewHistory = true;
     }
   },
   components: {

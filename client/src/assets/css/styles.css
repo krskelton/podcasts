@@ -1,75 +1,75 @@
-body{
-    font-family: 'Raleway', sans-serif;
-    margin:0;
+body {
+  font-family: "Raleway", sans-serif;
+  margin: 0;
 }
 h1 {
-    text-align: center;
-    font-size: 35px;
-    font-weight: 400;
-    text-transform: uppercase;
+  text-align: center;
+  font-size: 35px;
+  font-weight: 400;
+  text-transform: uppercase;
 }
 img.logo {
-    margin: 0 auto;
-    display: block;
-    width: 250px;
-    max-width: 100%;
+  margin: 0 auto;
+  display: block;
+  width: 250px;
+  max-width: 100%;
 }
 nav {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: #ccc;
-    margin: 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #ccc;
+  margin: 0;
 }
 nav button {
-    width: 33.33%;
+  width: 25%;
 }
 img.icon {
-    width: 75px;
-    padding:5px;
+  width: 75px;
+  padding: 5px;
 }
 div#content {
-    padding: 20px 40px;
-    margin-bottom: 100px;
+  padding: 20px 40px;
+  margin-bottom: 100px;
 }
 ul {
-    width: 100%;
-    list-style: none;
-    padding: 0;
+  width: 100%;
+  list-style: none;
+  padding: 0;
 }
-li{
-    width: 100%;
-    border-bottom: 1px solid #ccc;
-    padding: 30px 0;
-    display: flex;
-    justify-content: space-between;
+li {
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  padding: 30px 0;
+  display: flex;
+  justify-content: space-between;
 }
 li:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 button.button {
-    background: #ef8320;
-    border: #ef8320;
-    height: 40px;
-    color: #fff;
-    font-size: 15px;
-    display:block;
+  background: #ef8320;
+  border: #ef8320;
+  height: 40px;
+  color: #fff;
+  font-size: 15px;
+  display: block;
 }
 .player {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 .search {
-    margin: 0 auto;
-    display: block;
-    text-align: center;
+  margin: 0 auto;
+  display: block;
+  text-align: center;
 }
 .search input {
-    font-size: 20px;
-    height: 35px;
+  font-size: 20px;
+  height: 35px;
 }
 .search .button {
-    display: inline-block;
-    margin-left: 10px;
+  display: inline-block;
+  margin-left: 10px;
 }
