@@ -1,6 +1,5 @@
 <template>
-  <!-- Would like to build out a list of user's History
-  meaning any audio feed clicked play.-->
+  <!-- Would like to build out a list of user's History, aka any audio feed clicked 'play'.-->
   <div>
     <h2>My Listening History</h2>
     <ul>
@@ -10,9 +9,10 @@
 </template>
 
 <script>
-// // 1. create an array of items listened to starting from empty array.
-// // 2. write code to get items into array. ('GET'  method from db, ref HistoryAPI)
-// Question - how to tell if user has clicked on item??
+// // . create an array of items listened to starting from empty array.(see myHistory)
+// // where to determine user has clicked on that item -front end.
+// // . items clicked on must go into db
+// // use 'GET' method to call to history table, query taht table's data to display
 // // 3. display on front end.
 export default {
   name: "History",
@@ -23,6 +23,7 @@ export default {
         { item: "Podcast 2" },
         { item: "my podcast" }
       ]
+      //   this must read from db- history table
     };
   }
 };

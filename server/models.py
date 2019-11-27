@@ -10,9 +10,9 @@ class Users(db.Model):
 
 
 class Podcast(db.Model):
-    # we want to change the name of this table
+    # we want to change the name of this table as it is basically a subscriptions table.
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, ForeignKey("users.id"))
     name = db.Column(db.String(500))
     rss_feed_url = db.Column(db.String(2000))
     podcast_API_id = db.Column(db.Integer)
@@ -33,6 +33,6 @@ class PlaylistItems(db.Model):
 
 class History(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, ForeignKey("users.id"))
     episode_id = db.Column(db.Integer)
     # do i need the rss_feed_url here so that it can display a list of the episodes user has listened to?

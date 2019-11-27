@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <button @click="showRegister">Register</button>
+    <button @click="showLogin">Login</button>
+    <button @click="logout">Log Out</button>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <h1>Podcasts</h1>
     <div id="content">
@@ -54,6 +57,8 @@ export default {
       viewLogin: false,
       podcastName: "",
       podcastFeedURL: "",
+      userID: "",
+      podcastAPIid: "",
 
       loggedIn: false
     };
@@ -95,6 +100,7 @@ export default {
       this.viewPodcast = false;
       this.viewRegister = true;
       this.viewLogin = false;
+      this.viewHistory = false;
     },
     showLogin() {
       this.viewSubscriptions = false;
@@ -150,7 +156,6 @@ export default {
     SearchResults,
     Podcast,
     History,
-    Podcast,
     Register,
     Login
   }

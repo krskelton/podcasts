@@ -12,5 +12,16 @@ def show_my_history():
     my_podcast_history = db.session.query(History).all()
     podcast_items_in_history = [{"id": history.id, "user_id": history.user_id,
                                  "episode_id": history.episode_id} for podcast in my_podcast_history]
-    return jsonify({"episode_clicked_on": podcast_items_in_history})
-# do i need to hit API or only need to query db to find if user has touched an item?
+    return jsonify({"my_history": podcast_items_in_history})
+# any item clicked play has v-on:play functino to capture its info
+
+
+@history_api.route('/add-to-history', methods=['POST'])
+def add_to_history():
+    new_history_item = History()
+    # verify this is correct
+    new_history_item.user_id = request.json['user_id']
+    new_history_item.episode_id = request.json['episode_id']
+    db.session.add(new_history_item)
+    db.session.commit()
+    return jsonify(success=True)

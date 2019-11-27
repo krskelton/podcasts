@@ -5,74 +5,92 @@
     <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
     <button class="button" @click="subscribeToPodcast()">Subscribe</button>
     <ul v-if="!play">
-      <li v-for="(episode, index) in episodeList" v-bind:key="index" @click="playEpisode(episode.title, episode.enclosure.url)">
-          <div>
-              <h3>{{episode.title}}</h3>
-              <p>{{episode.description}}</p>
-          </div>
+      <li
+        v-for="(episode, index) in episodeList"
+        v-bind:key="index"
+        @click="playEpisode(episode.title, episode.enclosure.url)"
+      >
+        <div>
+          <h3>{{episode.title}}</h3>
+          <p>{{episode.description}}</p>
+        </div>
       </li>
     </ul>
     <!--The player includes a button to show all the episodes again, tbe title of the episode and a simple html audio player with the mp3 file passed to it.-->
     <div class="player" v-if="play">
-      <p><strong>{{episodeTitle}}</strong></p>
-      <audio controls>
-        <source :src="musicFile" type="audio/mpeg">
+      <p>
+        <strong>{{episodeTitle}}</strong>
+      </p>
+      <audio controls v-on:play="addToHistory">
+        <source :src="musicFile" type="audio/mpeg" />
       </audio>
-      <button class="button" style="margin: 20px auto;"@click="getRSSFeed(feedURL)">Return to episodes</button>
+      <button
+        class="button"
+        style="margin: 20px auto;"
+        @click="getRSSFeed(feedURL)"
+      >Return to episodes</button>
     </div>
   </div>
-  
 </template>
 
 <script>
-import axios from 'axios';
-let Parser = require('rss-parser');
+import axios from "axios";
+let Parser = require("rss-parser");
 
 export default {
-  name: 'Podcast',
+  name: "Podcast",
   //The podcastName and feedURL are passed as props from the parent component app.vue
   props: {
     podcastName: String,
     feedURL: String,
+    userID: String,
+    podcastAPIid: String
   },
   data() {
     return {
-      episodeList:[],
+      episodeList: [],
       play: false,
-      episodeTitle: '',
-      musicFile: ''
-    }
+      episodeTitle: "",
+      musicFile: ""
+    };
   },
-  methods:{
+  methods: {
     //subscribeToPodcast adds the podcast to the database
-    subscribeToPodcast(){
-      axios.post('/subscription', {name: this.podcastName, rss_feed_url: this.feedURL})
+    subscribeToPodcast() {
+      axios.post("/subscription", {
+        name: this.podcastName,
+        rss_feed_url: this.feedURL,
+        user_id: this.userID,
+        podcast_API_id: this.podcastAPIid
+      });
     },
     //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
-    getRSSFeed(RSSFEED){
-      axios.post('/itunes-api', {rss_feed: RSSFEED})
-      .then((data)=>{
-        console.log(data);
-          let parser = new Parser();
-           parser.parseString(data.data, (err, feed) => {
-             if (err) throw err;
-            this.episodeList = feed.items;
-            this.play = false;
-           });
-      })
-      
+    getRSSFeed(RSSFEED) {
+      axios.post("/itunes-api", { rss_feed: RSSFEED }).then(data => {
+        let parser = new Parser();
+        parser.parseString(data.data, (err, feed) => {
+          if (err) throw err;
+          this.episodeList = feed.items;
+          this.play = false;
+        });
+      });
     },
-    //playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
-    playEpisode(title, mp3){
+    // playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
+    addToHistory() {
+      console.log("this printed on play!");
+    },
+    playEpisode(title, mp3) {
       this.episodeTitle = title;
       this.musicFile = mp3;
       this.play = true;
-    } 
+      console.log("playEpisode:  ", title);
+      //could i tell the function to call another function which adds this item to history?
+    }
   },
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
-  mounted(){
+  mounted() {
     this.getRSSFeed(this.feedURL);
   }
-}
+};
 </script>
 

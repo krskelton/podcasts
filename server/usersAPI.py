@@ -1,18 +1,22 @@
 from flask import Blueprint, jsonify, request, session
 from sql_alchemy_db_instance import db
-from models import Users
+from models import Podcast, Users, PlaylistItems, Playlists, History
 from hashutils import make_salt, make_pw_hash, check_pw_hash
 
 users_api = Blueprint('users_api', __name__)
 
+
 @users_api.route('/duplicate-user-test', methods=["POST"])
 def test_duplicate_user():
     # return either a current user object (in the case that a username already exists),
-    # or an empty array (if a username hasn't been taken yet) 
+    # or an empty array (if a username hasn't been taken yet)
     username = request.json["username"]
-    user_in_db = db.session.query(Users).filter(Users.username == username).all()
-    user_in_db_results = [{"id": user.id, "user_username": user.username} for user in user_in_db]
+    user_in_db = db.session.query(Users).filter(
+        Users.username == username).all()
+    user_in_db_results = [
+        {"id": user.id, "user_username": user.username} for user in user_in_db]
     return jsonify({"does_the_user_exist": user_in_db_results})
+
 
 @users_api.route('/add-user', methods=["POST"])
 def add_user():
@@ -32,6 +36,7 @@ def add_user():
     session['user'] = new_user.username
     return jsonify({"username": new_user.username})
 
+
 @users_api.route('/login', methods=["POST"])
 def login():
     username = request.json['username']
@@ -46,7 +51,8 @@ def login():
         # in the DB, create a session for that user
         session['user'] = user.username
         return jsonify({"username": user.username})
-    return jsonify(success = False)
+    return jsonify(success=False)
+
 
 @users_api.route('/users', methods=['POST', 'GET'])
 def test_users_in_session():
@@ -56,6 +62,7 @@ def test_users_in_session():
     if 'user' in session:
         return jsonify({"userInSession": session['user']})
     return jsonify(success=False)
+
 
 @users_api.route('/logout', methods=['POST', 'GET'])
 def logout():
