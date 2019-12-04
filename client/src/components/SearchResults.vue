@@ -2,17 +2,22 @@
     <div class="search-results">
         <h2>Find Podcast</h2>
         <div class="search">
-            <input v-model="searchTerm"/>
+            <input v-model="searchTerm" @keyup.enter="searchForPodcast"/>
             <button class="button" @click="searchForPodcast">Find Podcast</button>
         </div>
-        <ul>
-            <li v-for="(searchResult, index) in searchResults" v-bind:key="index" @click="sendFeedtoParent(searchResult.feedUrl, searchResult.collectionName)">{{searchResult.collectionName}}</li>
+        <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
+            <li>{{searchResult.collectionName}}
+                <!-- <button @click="sendFeedtoParent(searchResult.feedUrl, searchResult.collectionName)">Subscribe</button> -->
+                <button @click="sendFeedtoPodcast(searchResult.feedUrl, searchResult.collectionName)">Subscribe</button>
+                <!-- <button @click="addToPlaylist(searchResult.feedUrl, searchResult.collectionName)">Add to playlist</button> -->
+            </li>
         </ul>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { searchBus } from '../main'
 
 export default {
     name: 'SearchResults',
@@ -31,9 +36,24 @@ export default {
             })
         },
         //this.$emit sends the data to parent component
-        sendFeedtoParent(url, name){
-            this.$emit('feedFromSearch', url, name);
+        // sendFeedtoParent(url, name){
+        //     console.log("url: ", url, "name: ", name)
+        //     // this.$emit('feedFromSearch', url, name);
+        //     searchBus.$emit('feedFromSearch', url, name)
+        //     this.$router.push('/podcast')
+        // }
+        sendFeedtoPodcast(url, name){
+            console.log("send feed to podcast", url, name)
+            // this.$emit('feedFromSearch', url, name);
+            searchBus.$emit('feedFromSearch', url, name)
+            // this.$router.push('/subscriptions')
+
+            // it seems if /podcast isn't instanciated, the bus wont be 'detected' and acted upon.
+            // this.$router.push('/podcast')
         }
+    },
+    created() {
+        
     }
 }
 </script>
