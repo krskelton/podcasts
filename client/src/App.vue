@@ -123,7 +123,24 @@ export default {
     logout(){
       axios.post('/logout');
       this.loggedIn = false;
-
+    },
+    async testUserInSession() {
+      /* hits backend and checks to see if a user is in session - adjusts this.loggedIn accordingly
+      this ensures that the correct navbar buttons are displayed at all times */
+      let promise = axios.post('/users')
+      .then((resp) => {
+        if (resp.data.success == false){
+          this.loggedIn = false;
+          return false;
+        }
+        this.userInSession = resp.data.userInSession;
+        this.loggedIn = true;
+        return true;
+      })
+      // these lines ensure that the promise resolves before adjusting the value of this.loggedIn (accounts for asynch)
+      let result = await promise;
+      console.log(result)
+      return result;
     }
   },
   components: {
@@ -133,8 +150,10 @@ export default {
     Podcast,
     Register,
     Login
+  },
+  mounted(){
+    this.testUserInSession()
   }
-  
 }
 </script>
 
