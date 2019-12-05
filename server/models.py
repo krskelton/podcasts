@@ -1,5 +1,6 @@
 from sql_alchemy_db_instance import db
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class Users(db.Model):
@@ -7,12 +8,13 @@ class Users(db.Model):
     username = db.Column(db.String(25), unique=True)
     password = db.Column(db.String(128), nullable=False)
     salt = db.Column(db.String(40), nullable=False)
+    user_history = db.relationship('History', backref='users')
 
 
 class Podcast(db.Model):
     # we want to change the name of this table as it is basically a subscriptions table.
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     name = db.Column(db.String(500))
     rss_feed_url = db.Column(db.String(2000))
     podcast_API_id = db.Column(db.Integer)
@@ -32,7 +34,9 @@ class PlaylistItems(db.Model):
 
 
 class History(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey("users.id"))
-    episode_id = db.Column(db.Integer)
-    # do i need the rss_feed_url here so that it can display a list of the episodes user has listened to?
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    # episode_name : currently storing title in place of unique episode ID
+    episode_id = db.Column(db.String)
+    # would like to change this to be actual date-time the user clicked on play.
+    time_stamp_accessed = db.Column(db.String)

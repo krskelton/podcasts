@@ -3,28 +3,34 @@
   <div>
     <h2>My Listening History</h2>
     <ul>
-      <li v-for="item in myHistory">{{ item.item }}</li>
+      <li v-for="item in myHistory">
+        <span>{{ item.item }} Name of episode and audio control to play</span>
+      </li>
     </ul>
+    <button @click="getmyHistory()">get stuff</button>
   </div>
 </template>
 
 <script>
-// // . create an array of items listened to starting from empty array.(see myHistory)
-// // where to determine user has clicked on that item -front end.
-// // . items clicked on must go into db
-// // use 'GET' method to call to history table, query taht table's data to display
+import axios from "axios";
+
+// // use 'GET' method to call to history table, display list of episodes.
 // // 3. display on front end.
 export default {
   name: "History",
   data() {
     return {
-      myHistory: [
-        { item: "Podcast 1" },
-        { item: "Podcast 2" },
-        { item: "my podcast" }
-      ]
+      myHistory: [],
       //   this must read from db- history table
+      trackID: "" //this piece of data is actually the whole podcast ID. not sure if we will use it.
     };
+  },
+  methods: {
+    getMyHistory() {
+      axios.get("/my-history").then(res => {
+        console.log(this.myHistory, "res.data=", res.data.myHistory);
+      });
+    }
   }
 };
 </script>

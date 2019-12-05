@@ -12,7 +12,12 @@
       <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved" />
       <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved" />
       <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved" />
-      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" />
+      <Podcast
+        v-if="viewPodcast"
+        :podcastName="podcastName"
+        :feedURL="podcastFeedURL"
+        :userID="userID"
+      />
       <History v-if="viewHistory" />
     </div>
     <nav>
@@ -57,8 +62,9 @@ export default {
       viewLogin: false,
       podcastName: "",
       podcastFeedURL: "",
-      userID: "",
       podcastAPIid: "",
+      episodeTitle: "",
+      timeDateAccessed: "12-4-19",
 
       loggedIn: false
     };
