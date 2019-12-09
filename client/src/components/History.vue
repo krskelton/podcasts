@@ -3,9 +3,9 @@
   <div>
     <h2>My Listening History</h2>
     <ul>
-      <!-- <li v-for="item in myHistory">
-        <span>{{ item.item }} Name of episode and audio control to play</span>
-      </li>-->
+      <li v-for="item in myHistory">
+        <span>{{ item.episode_id }}</span>
+      </li>
     </ul>
     <div class="buttons">
       <button @click="getMyHistory">get stuff</button>
@@ -29,8 +29,11 @@ export default {
   },
   methods: {
     getMyHistory() {
-      console.log("i printed");
+      axios.get('/my-history').then(res => this.myHistory = res.data.my_history_list);
     }
+  },
+  mounted(){
+    this.getMyHistory()
   }
 };
 </script>
