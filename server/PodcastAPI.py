@@ -7,7 +7,10 @@ podcast_api = Blueprint('podcast_api', __name__)
 
 @podcast_api.route('/subscriptions', methods=['GET'])
 def serve_all_subscriptions():
-    podcast_instances = db.session.query(Podcast).all()
+    user_in_session_username = session['user']
+    user_in_session_db_info = db.session.query(Users).filter(Users.username == user_in_session_username).first()
+    user_id = user_in_session_db_info.id
+    podcast_instances = db.session.query(Podcast).filter(Podcast.user_id == user_id).all()
     podcast_items = [{"id": podcast.id, "name": podcast.name, "rss_feed_url": podcast.rss_feed_url} for podcast in podcast_instances]
     return jsonify({"name": podcast_items})
 
