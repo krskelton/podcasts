@@ -21,8 +21,8 @@
       <!-- <Login v-if="viewLogin" /> -->
       <!-- <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved"/> -->
       <!-- <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved"/> -->
-      <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/>
-      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" />
+      <!-- <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/> -->
+      <!-- <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" /> -->
     </div>
   </div>
 </template>
@@ -77,38 +77,38 @@ export default {
         this.$router.push('/subscriptions')
       })
     },
-    browseFeedRecieved(feedurl2, podcastname2){
-        this.podcastName = podcastname2;
-        this.podcastFeedURL = feedurl2;
-        this.viewBrowse = false;
-        this.viewPodcast = true;
-        this.viewRegister = false;
-        this.viewLogin = false;
-    },
-    subscriptionFeedRecieved(feedurl3, podcastname3){
-        this.podcastName = podcastname3;
-        this.podcastFeedURL = feedurl3;
-        this.viewSubscriptions = false;
-        this.viewPodcast = true;
-        this.viewRegister = false;
-        this.viewLogin = false;
-    },
-    showRegister(){
-      this.viewSubscriptions = false;
-      this.viewSearch = false;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
-      this.viewRegister = true;
-      this.viewLogin = false;
-    },
-    showLogin(){
-      this.viewSubscriptions = false;
-      this.viewSearch = false;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
-      this.viewRegister = false;
-      this.viewLogin = true;
-    },
+    // browseFeedRecieved(feedurl2, podcastname2){
+    //     this.podcastName = podcastname2;
+    //     this.podcastFeedURL = feedurl2;
+    //     this.viewBrowse = false;
+    //     this.viewPodcast = true;
+    //     this.viewRegister = false;
+    //     this.viewLogin = false;
+    // },
+    // subscriptionFeedRecieved(feedurl3, podcastname3){
+    //     this.podcastName = podcastname3;
+    //     this.podcastFeedURL = feedurl3;
+    //     this.viewSubscriptions = false;
+    //     this.viewPodcast = true;
+    //     this.viewRegister = false;
+    //     this.viewLogin = false;
+    // },
+    // showRegister(){
+    //   this.viewSubscriptions = false;
+    //   this.viewSearch = false;
+    //   this.viewBrowse = false;
+    //   this.viewPodcast = false;
+    //   this.viewRegister = true;
+    //   this.viewLogin = false;
+    // },
+    // showLogin(){
+    //   this.viewSubscriptions = false;
+    //   this.viewSearch = false;
+    //   this.viewBrowse = false;
+    //   this.viewPodcast = false;
+    //   this.viewRegister = false;
+    //   this.viewLogin = true;
+    // },
     //The methods below simply show components and hide others when the user clicks on elements of the page.
     showSubscriptions(){
       this.viewSubscriptions = true;

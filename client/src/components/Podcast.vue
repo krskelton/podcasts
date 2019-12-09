@@ -27,7 +27,7 @@
 
 <script>
 import axios from 'axios';
-// import { bus } from '../main'
+import { browseBus } from '../main'
 
 let Parser = require('rss-parser');
 
@@ -60,6 +60,7 @@ export default {
     // },
     //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
     getRSSFeed(RSSFEED){
+      console.log("podcast.vue - itunes-api post")
       axios.post('/itunes-api', {rss_feed: RSSFEED})
       .then((data)=>{
         console.log(data);
@@ -84,16 +85,15 @@ export default {
     } 
   },
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
-  mounted(){
-    this.getRSSFeed(this.feedURL);
-  },
-  // created(){
-  //   bus.$on('feedFromSearch', (url, name) => {
-  //     console.log("Podcast.vue - bus arrived!", url, name)
-  //     // this.searchFeedRecieved(url, name)
-  //     this.subscribeToPodcast(name, url)
-  //   })
+  // mounted(){
+  //   this.getRSSFeed(this.feedURL);
   // },
+  created(){
+    browseBus.$on('feedFromBrowse', (url, name) => {
+      console.log("app.vue = browseBus arrived!")
+      this.getRSSFeed(url)
+    })
+  },
 }
 </script>
 

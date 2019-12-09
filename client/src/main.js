@@ -11,6 +11,7 @@ import Login from "./components/Login"
 Vue.use(VueRouter)
 
 export const searchBus = new Vue()
+export const browseBus = new Vue()
 
 Vue.config.productionTip = false
 

@@ -84,7 +84,9 @@ export default {
             .then((data) => {
                 this.podcastFeedUrl = data.data.results[0].feedUrl;
                 //this.$emit sends the data to parent component
+                // this.$emit('feedFromBrowse', this.podcastFeedUrl, name);
                 this.$emit('feedFromBrowse', this.podcastFeedUrl, name);
+                this.$router.push('/podcast')
             })
         }
     }
