@@ -45,7 +45,6 @@ export default {
   props: {
     podcastName: String,
     feedURL: String,
-    userID: String,
     podcastAPIid: String
     //timeDateAccessed: String
   },

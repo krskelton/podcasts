@@ -11,12 +11,16 @@ history_api = Blueprint('history_api', __name__)
 
 @history_api.route('/my-history', methods=['GET'])
 def show_my_history():
-    user_in_session = session['user']
+    user = session.get('user')
+    print('---------------')
+    print(user)
     user_in_session = db.session.query(Users).filter(
-        Users.username == user_in_session).first()
+        Users.username == user).first()
+    print('---------------')
+    print(user_in_session)
     user_id_of_user_in_session = user_in_session.id
     print('---------------')
-    # print(user_id_of_user_in_session)
+    print(user_id_of_user_in_session)
     my_history_instances = db.session.query(
         History.id, History.user_id, History.episode_id, History.time_stamp_accessed).filter(History.user_id == user_id_of_user_in_session).all()
 
@@ -24,7 +28,7 @@ def show_my_history():
                                  "time_stamp_accessed": history.time_stamp_accessed} for history in my_history_instances]
     return jsonify({"my_history_list": podcast_items_in_history})
 # any item clicked play has v-on:play (addToHistory function) to capture its info
-#filter(Users.id == History.user_id)
+# filter(Users.id == History.user_id)
 
 
 @history_api.route('/add-to-history', methods=['POST'])

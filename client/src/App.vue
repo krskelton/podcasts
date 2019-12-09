@@ -12,12 +12,7 @@
       <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved" />
       <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved" />
       <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved" />
-      <Podcast
-        v-if="viewPodcast"
-        :podcastName="podcastName"
-        :feedURL="podcastFeedURL"
-        :userID="userID"
-      />
+      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" />
       <History v-if="viewHistory" />
     </div>
     <nav>
