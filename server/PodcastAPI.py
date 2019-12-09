@@ -17,6 +17,7 @@ def add_subscription():
     user_in_session = session['user']
     username = db.session.query(Users).filter(Users.username==user_in_session).first()
     new_podcast.user_id = username.id
+    new_podcast.podcast_API_id = request.json["podcast_id"]
     new_podcast.name = request.json["name"]
     new_podcast.rss_feed_url = request.json["rss_feed_url"]
     db.session.add(new_podcast)

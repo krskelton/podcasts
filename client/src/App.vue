@@ -17,7 +17,7 @@
       <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved"/>
       <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved"/>
       <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/>
-      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" />
+      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" :podcastId="podcastId"/>
     </div>
   </div>
 </template>
@@ -46,31 +46,35 @@ export default {
 
       podcastName: '',
       podcastFeedURL: '',
+      podcastId: '',
 
       loggedIn: false
     }
   },
   methods: {
     //The feedRecieved methods get the feed url and podcast name from the SearchResults, Browse and Subscription components. They set the podcastName and podcastFeedURL from the data() above so that app.vue can pass those variables to podcast.vue.
-    searchFeedRecieved(feedurl, podcastname){
+    searchFeedRecieved(feedurl, podcastname, podcastId){
         this.podcastName = podcastname;
         this.podcastFeedURL = feedurl;
+        this.podcastId = podcastId;
         this.viewSearch = false;
         this.viewPodcast = true;
         this.viewRegister = false;
         this.viewLogin = false;
     },
-    browseFeedRecieved(feedurl2, podcastname2){
+    browseFeedRecieved(feedurl2, podcastname2, podcastId2){
         this.podcastName = podcastname2;
         this.podcastFeedURL = feedurl2;
+        this.podcastId = podcastId2;
         this.viewBrowse = false;
         this.viewPodcast = true;
         this.viewRegister = false;
         this.viewLogin = false;
     },
-    subscriptionFeedRecieved(feedurl3, podcastname3){
+    subscriptionFeedRecieved(feedurl3, podcastname3, podcastId3){
         this.podcastName = podcastname3;
         this.podcastFeedURL = feedurl3;
+        this.podcastId = podcastId3;
         this.viewSubscriptions = false;
         this.viewPodcast = true;
         this.viewRegister = false;

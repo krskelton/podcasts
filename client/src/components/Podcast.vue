@@ -34,6 +34,7 @@ export default {
   props: {
     podcastName: String,
     feedURL: String,
+    podcastId: Number,
   },
   data() {
     return {
@@ -46,13 +47,12 @@ export default {
   methods:{
     //subscribeToPodcast adds the podcast to the database
     subscribeToPodcast(){
-      axios.post('/subscription', {name: this.podcastName, rss_feed_url: this.feedURL})
+      axios.post('/subscription', {name: this.podcastName, rss_feed_url: this.feedURL, podcast_id: this.podcastId})
     },
     //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
     getRSSFeed(RSSFEED){
       axios.post('/itunes-api', {rss_feed: RSSFEED})
       .then((data)=>{
-        console.log(data);
           let parser = new Parser();
            parser.parseString(data.data, (err, feed) => {
              if (err) throw err;

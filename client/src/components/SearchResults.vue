@@ -6,7 +6,7 @@
             <button class="button" @click="searchForPodcast">Find Podcast</button>
         </div>
         <ul>
-            <li v-for="(searchResult, index) in searchResults" v-bind:key="index" @click="sendFeedtoParent(searchResult.feedUrl, searchResult.collectionName)">{{searchResult.collectionName}}</li>
+            <li v-for="(searchResult, index) in searchResults" v-bind:key="index" @click="sendFeedtoParent(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">{{searchResult.collectionName}}</li>
         </ul>
     </div>
 </template>
@@ -27,12 +27,13 @@ export default {
         searchForPodcast(){
             axios.get('https://itunes.apple.com/search?term=' + this.searchTerm + '&country=US&media=podcast')
             .then((data) => {
+                console.log(data)
                 this.searchResults = data.data.results;
             })
         },
         //this.$emit sends the data to parent component
-        sendFeedtoParent(url, name){
-            this.$emit('feedFromSearch', url, name);
+        sendFeedtoParent(url, name, id){
+            this.$emit('feedFromSearch', url, name, id);
         }
     }
 }
