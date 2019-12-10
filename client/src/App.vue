@@ -22,7 +22,7 @@
       <!-- <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved"/> -->
       <!-- <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved"/> -->
       <!-- <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/> -->
-      <!-- <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" /> -->
+      <!-- <Podcast :podcastName="podcastName" :feedURL="podcastFeedURL" /> -->
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="episodes">
-    <h2>{{podcastName}}</h2>
-    <h3>{{feedURL}}</h3>
+    <h2>{{this.$parent.podcastName}}</h2>
+    <h3>{{this.$parent.podcastFeedURL}}</h3>
     <!--IDEA: add conditional so that subscribe button is disabled if you are already subscribed to that podcast-->
     <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
     <button class="button" @click="subscribeToPodcast()">Subscribe</button>
@@ -34,10 +34,10 @@ let Parser = require('rss-parser');
 export default {
   name: 'Podcast',
   //The podcastName and feedURL are passed as props from the parent component app.vue
-  props: {
-    podcastName: String,
-    feedURL: String,
-  },
+  // props: {
+  //   podcastName: String,
+  //   feedURL: String,
+  // },
   data() {
     return {
       episodeList:[],
@@ -85,9 +85,9 @@ export default {
     }
   },
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
-  // mounted(){
-  //   this.getRSSFeed(this.feedURL);
-  // },
+  mounted(){
+    this.getRSSFeed(this.$parent.podcastFeedURL);
+  },
   // created(){
   //   browseBus.$on('feedFromBrowse', (url, name) => {
   //     console.log("app.vue = browseBus arrived!")
