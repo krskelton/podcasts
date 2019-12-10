@@ -4,8 +4,8 @@
       <div v-if="!this.$parent.loggedIn">
       <!-- if there's not currently a user logged in, allow them to log in -->
         <h1>Login</h1>
-        <p>Username:</p><input v-model="username" type="text" />
-        <p>Password:</p><input type="password" v-model="password"/>
+        <p>Username:</p><input v-model="username" @keyup.enter="login()" type="text" />
+        <p>Password:</p><input type="password" v-model="password" @keyup.enter="login()"/>
         <br><br>
         <button @click="login()">Submit</button>
         <div class="error">{{ error }}</div>
@@ -32,8 +32,10 @@ export default {
   },
   methods: {
     login() {
+      console.log("login.vue - login: pre-axios")
       axios.post('/login', {username: this.username, password: this.password})
       .then((resp) => {
+        console.log("login.vue - post /login")
         if (resp.data.success == false){
           // if the response is a failure, the password wasn't correct - display an error
           this.error = "Your password was entered incorrectly. Try again.";
@@ -43,6 +45,7 @@ export default {
           this.error = "There's no user with that username. Please try again, or register as a new user."
           return;
         } else {
+          console.log('test')
           // otherwise, change the status of $parent.loggedIn and redirect to homepage
           this.username = '';
           this.password = '';

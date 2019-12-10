@@ -56,6 +56,9 @@
 
 <script>
 import axios from 'axios';
+
+import { browseBus } from '../main'
+
 export default {
     name: 'Browse',
     data() {
@@ -82,9 +85,12 @@ export default {
 
             axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
             .then((data) => {
+                console.log("browse.vue - getRSS() - axios")
                 this.podcastFeedUrl = data.data.results[0].feedUrl;
                 //this.$emit sends the data to parent component
-                this.$emit('feedFromBrowse', this.podcastFeedUrl, name);
+                // this.$emit('feedFromBrowse', this.podcastFeedUrl, name);
+                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name);
+                
             })
         }
     }
