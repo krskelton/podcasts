@@ -15,7 +15,7 @@
     <!--The player includes a button to show all the episodes again, tbe title of the episode and a simple html audio player with the mp3 file passed to it.-->
     <div class="player" v-if="play">
       <p><strong>{{episodeTitle}}</strong></p>
-      <audio controls>
+      <audio controls id="podcast-audio" v-on:play="determinePlaceInTrack()">
         <source :src="musicFile" type="audio/mpeg">
       </audio>
       <button class="button" style="margin: 20px auto;"@click="getRSSFeed(feedURL)">Return to episodes</button>
@@ -60,13 +60,19 @@ export default {
             this.play = false;
            });
       })
-      
+
     },
     //playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
     playEpisode(title, mp3){
       this.episodeTitle = title;
       this.musicFile = mp3;
       this.play = true;
+    },
+    determinePlaceInTrack(){
+      var podcastAudio = document.getElementById('podcast-audio');
+      podcastAudio.ontimeupdate = function(){
+        console.log(podcastAudio.currentTime);
+      }
     } 
   },
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible

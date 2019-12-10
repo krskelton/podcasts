@@ -25,6 +25,7 @@ export default {
     },
     //Remove a subsciption from the database
     removeSubscription(id){
+      console.log(id);
       axios.patch('/subscription', {id : id})
       .then(() => this.getSubscriptions());
     },
