@@ -27,17 +27,17 @@
 
 <script>
 import axios from 'axios';
-import { browseBus } from '../main'
+// import { browseBus } from '../main'
 
 let Parser = require('rss-parser');
 
 export default {
   name: 'Podcast',
   //The podcastName and feedURL are passed as props from the parent component app.vue
-  // props: {
-  //   podcastName: String,
-  //   feedURL: String,
-  // },
+  props: {
+    podcastName: String,
+    feedURL: String,
+  },
   data() {
     return {
       episodeList:[],
@@ -45,8 +45,8 @@ export default {
       episodeTitle: '',
       musicFile: '',
 
-      podcastName: '',
-      feedURL: ''
+      // podcastName: '',
+      // feedURL: ''
     }
   },
   methods:{
@@ -82,18 +82,18 @@ export default {
       this.episodeTitle = title;
       this.musicFile = mp3;
       this.play = true;
-    } 
+    }
   },
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
   // mounted(){
   //   this.getRSSFeed(this.feedURL);
   // },
-  created(){
-    browseBus.$on('feedFromBrowse', (url, name) => {
-      console.log("app.vue = browseBus arrived!")
-      this.getRSSFeed(url)
-    })
-  },
+  // created(){
+  //   browseBus.$on('feedFromBrowse', (url, name) => {
+  //     console.log("app.vue = browseBus arrived!")
+  //     this.viewThisPodcast(url, name)
+  //   })
+  // },
 }
 </script>
 

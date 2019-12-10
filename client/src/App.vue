@@ -38,7 +38,7 @@ import Login from './components/Login.vue'
 import axios from 'axios'
 
 import { searchBus } from './main'
-
+import { browseBus } from './main'
 
 export default {
   name: 'app',
@@ -76,6 +76,13 @@ export default {
       .then(() => {
         this.$router.push('/subscriptions')
       })
+    },
+    viewThisPodcast(url, name) {
+      console.log("viewThisPodcast()")
+      this.podcastName = name
+      this.podcastFeedURL = url
+      console.log(this.podcastName, this.podcastFeedURL)
+      this.$router.push('/podcast')
     },
     // browseFeedRecieved(feedurl2, podcastname2){
     //     this.podcastName = podcastname2;
@@ -145,6 +152,10 @@ export default {
       console.log("app.vue - searchBus arrived!")
       // this.searchFeedRecieved(url, name)
       this.subscribeToPodcast(name, url)
+    }),
+    browseBus.$on('feedFromBrowse', (url, name) => {
+      console.log("app.vue = browseBus arrived!")
+    this.viewThisPodcast(url, name)
     })
   },
   components: {
