@@ -44,10 +44,10 @@ export default {
         //     searchBus.$emit('feedFromSearch', url, name)
         //     this.$router.push('/podcast')
         // }
-        sendFeedtoPodcast(url, name, id){
-            console.log("send feed to podcast", url, name, id)
+        sendFeedtoPodcast(url, name, podcast_id){
+            console.log("send feed to podcast", url, name, podcast_id)
             // this.$emit('feedFromSearch', url, name);
-            searchBus.$emit('feedFromSearch', url, name, id)
+            searchBus.$emit('feedFromSearch', url, name, podcast_id)
             // this.$router.push('/subscriptions')
 
             // it seems if /podcast isn't instanciated, the bus wont be 'detected' and acted upon.

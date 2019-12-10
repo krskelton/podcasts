@@ -76,9 +76,9 @@ export default {
         this.podcastId = podcastId3;
     },
     // Moved this method here so that it can react to the bus.$emit from SearchResults.vue without needing to go through Podcast.vue.
-    subscribeToPodcast(name, rss_feed_url, id){
-      console.log("app.vue - post: ", name, rss_feed_url, id)
-      axios.post('/subscription', {name, rss_feed_url, id})
+    subscribeToPodcast(name, rss_feed_url, podcast_id){
+      console.log("app.vue - post: ", name, rss_feed_url, podcast_id)
+      axios.post('/subscription', {name, rss_feed_url, podcast_id})
       .then(() => {
         this.$router.push('/subscriptions')
       })
@@ -158,10 +158,10 @@ export default {
     }
   },
   created(){
-    searchBus.$on('feedFromSearch', (url, name, id) => {
+    searchBus.$on('feedFromSearch', (url, name, podcast_id) => {
       console.log("app.vue - searchBus arrived!")
       // this.searchFeedRecieved(url, name)
-      this.subscribeToPodcast(name, url, id)
+      this.subscribeToPodcast(name, url, podcast_id)
     }),
     browseBus.$on('feedFromBrowse', (url, name) => {
       console.log("app.vue = browseBus arrived!")
