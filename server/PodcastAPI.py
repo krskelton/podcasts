@@ -25,7 +25,6 @@ def add_subscription():
     new_podcast.user_id = username.id
     new_podcast.name = request.json["name"]
     new_podcast.rss_feed_url = request.json["rss_feed_url"]
-    # new_podcast.podcast_API_id = request.json["podcast_API_id"]
     db.session.add(new_podcast)
     db.session.commit()
     return jsonify(success=True)

@@ -59,7 +59,7 @@ export default {
       podcastFeedURL: "",
       podcastAPIid: "",
       episodeTitle: "",
-      timeDateAccessed: "12-4-19",
+      timeDateAccessed: "",
 
       loggedIn: false
     };

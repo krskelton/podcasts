@@ -31,6 +31,8 @@
         style="margin: 20px auto;"
         @click="getRSSFeed(feedURL)"
       >Return to episodes</button>
+      <br />
+      <button @click="getTimeStamp">Time</button>
     </div>
   </div>
 </template>
@@ -38,6 +40,7 @@
 <script>
 import axios from "axios";
 let Parser = require("rss-parser");
+var Sugar = require("sugar");
 
 export default {
   name: "Podcast",
@@ -54,7 +57,8 @@ export default {
       play: false,
       episodeTitle: "",
       musicFile: "",
-      timeDateAccessed: "12-4-19"
+      timeDateAccessed: "",
+      d: ""
     };
   },
   methods: {
@@ -77,10 +81,20 @@ export default {
       });
     },
     addToHistory() {
+      let timestamp = Sugar.Date.format(
+        new Date(Date.now()),
+        "%Y-%m-%d %H:%M:%S"
+      );
+      this.timeDateAccessed = timestamp;
       axios.post("/add-to-history", {
         episode_title: this.episodeTitle,
         time_date: this.timeDateAccessed
       });
+    },
+    getTimeStamp() {
+      let now = Sugar.Date.format(new Date(Date.now()), "%Y-%m-%d %H:%M:%S");
+      console.log("sugar date is: ", now);
+      return now;
     },
     // playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
     playEpisode(title, mp3) {
@@ -89,6 +103,7 @@ export default {
       this.play = true;
     }
   },
+
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
   mounted() {
     this.getRSSFeed(this.feedURL);

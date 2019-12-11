@@ -1,6 +1,7 @@
 from sql_alchemy_db_instance import db
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 
 class Users(db.Model):
@@ -38,5 +39,4 @@ class History(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     # episode_name : currently storing title in place of unique episode ID
     episode_id = db.Column(db.String)
-    # would like to change this to be actual date-time the user clicked on play.
-    time_stamp_accessed = db.Column(db.String)
+    time_stamp_accessed = db.Column(db.DateTime, default=datetime.now())
