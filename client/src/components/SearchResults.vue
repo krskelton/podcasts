@@ -6,10 +6,8 @@
             <button class="button" @click="searchForPodcast">Find Podcast</button>
         </div>
         <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
-            <li>{{searchResult.collectionName}}
-                <!-- <button @click="sendFeedtoParent(searchResult.feedUrl, searchResult.collectionName)">Subscribe</button> -->
-                <button @click="sendFeedtoPodcast(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">Subscribe</button>
-                <!-- <button @click="addToPlaylist(searchResult.feedUrl, searchResult.collectionName)">Add to playlist</button> -->
+            <li @click="sendFeedtoApp(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">{{searchResult.collectionName}}
+                <button @click="subscribe(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">Subscribe</button>
             </li>
         </ul>
     </div>
@@ -25,6 +23,7 @@ export default {
         return {
             searchTerm: '',
             searchResults: [],
+            subscribing: false
         }
     },
     methods: {
@@ -36,23 +35,16 @@ export default {
                 this.searchResults = data.data.results;
             })
         },
-        //this.$emit sends the data to parent component
+        subscribe(url, name, podcast_id) {
+            this.subscribing = true;
+            this.sendFeedtoApp(url, name, podcast_id)
+        },
+        sendFeedtoApp(url, name, podcast_id){
+            let isSubscribing = this.subscribing
+            searchBus.$emit('feedFromSearch', url, name, podcast_id, isSubscribing)
+            this.subscribing = false
+        },
 
-        // sendFeedtoParent(url, name){
-        //     console.log("url: ", url, "name: ", name)
-        //     // this.$emit('feedFromSearch', url, name);
-        //     searchBus.$emit('feedFromSearch', url, name)
-        //     this.$router.push('/podcast')
-        // }
-        sendFeedtoPodcast(url, name, podcast_id){
-            console.log("send feed to podcast", url, name, podcast_id)
-            // this.$emit('feedFromSearch', url, name);
-            searchBus.$emit('feedFromSearch', url, name, podcast_id)
-            // this.$router.push('/subscriptions')
-
-            // it seems if /podcast isn't instanciated, the bus wont be 'detected' and acted upon.
-            // this.$router.push('/podcast')
-        }
     },
     created() {
         

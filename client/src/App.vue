@@ -6,25 +6,11 @@
     <button @click="logout">Log Out</button>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg">
     <router-view></router-view>
-    <h1>Podcasts</h1>
     <nav>
       <router-link to="/subscriptions"><img class="icon" src="./assets/images/my-list.png"/></router-link>
       <router-link to="/searchresults" @click="showSearch"><img class="icon" src="./assets/images/search.png"/></router-link>
       <router-link to="/browse"><img class="icon" src="./assets/images/browse.png"/></router-link>
-      <!-- <router-link to="/playlists"><img class="icon" src="./assets/images/playlist.png"/></router-link> -->
-      <!-- <button @click="showSubscriptions"><img class="icon" src="./assets/images/my-list.png"/></button>
-      <button @click="showSearch"><img class="icon" src="./assets/images/search.png"/></button>
-      <button @click="showBrowse"><img class="icon" src="./assets/images/browse.png"/></button> -->
     </nav>
-    <div id="content">
-      <!--If the parent receives data from the child it will have @feedfrom[nameofchild]. This is passing the podcast name and feed url to the parent so the parent can pass it to the podcast.vue child component since child components can't pass data directly to each other.-->
-      <!-- <Register v-if="viewRegister" />
-      <Login v-if="viewLogin" />
-      <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved"/>
-      <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved"/>
-      <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/>
-      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" :podcastId="podcastId"/> -->
-    </div>
   </div>
 </template>
 
@@ -59,35 +45,15 @@ export default {
     }
   },
   methods: {
-    //The feedRecieved methods get the feed url and podcast name from the SearchResults, Browse and Subscription components. They set the podcastName and podcastFeedURL from the data() above so that app.vue can pass those variables to podcast.vue.
-    searchFeedRecieved(feedurl, podcastname, podcastId){
-        this.podcastName = podcastname;
-        this.podcastFeedURL = feedurl;
-        this.podcastId = podcastId;
-    },
-    browseFeedRecieved(feedurl2, podcastname2, podcastId2){
-        this.podcastName = podcastname2;
-        this.podcastFeedURL = feedurl2;
-        this.podcastId = podcastId2;
-    },
-    subscriptionFeedRecieved(feedurl3, podcastname3, podcastId3){
-        this.podcastName = podcastname3;
-        this.podcastFeedURL = feedurl3;
-        this.podcastId = podcastId3;
-    },
-    // Moved this method here so that it can react to the bus.$emit from SearchResults.vue without needing to go through Podcast.vue.
     subscribeToPodcast(name, rss_feed_url, podcast_id){
-      console.log("app.vue - post: ", name, rss_feed_url, podcast_id)
       axios.post('/subscription', {name, rss_feed_url, podcast_id})
       .then(() => {
         this.$router.push('/subscriptions')
       })
     },
     viewThisPodcast(url, name) {
-      console.log("viewThisPodcast()")
       this.podcastName = name
       this.podcastFeedURL = url
-      console.log(this.podcastName, this.podcastFeedURL)
       this.$router.push('/podcast')
     },
     //The methods below simply show components and hide others when the user clicks on elements of the page.
@@ -158,13 +124,18 @@ export default {
     }
   },
   created(){
-    searchBus.$on('feedFromSearch', (url, name, podcast_id) => {
-      console.log("app.vue - searchBus arrived!")
-      // this.searchFeedRecieved(url, name)
-      this.subscribeToPodcast(name, url, podcast_id)
+    searchBus.$on('feedFromSearch', (url, name, podcast_id, isSubscribing) => {
+      if (isSubscribing === true) {
+        this.subscribeToPodcast(name, url, podcast_id)
+        return
+      }
+      this.viewThisPodcast(url, name)
     }),
-    browseBus.$on('feedFromBrowse', (url, name) => {
-      console.log("app.vue = browseBus arrived!")
+    browseBus.$on('feedFromBrowse', (url, name, podcast_id, isSubscribing) => {
+      if (isSubscribing === true) {
+        this.subscribeToPodcast(name, url, podcast_id)
+        return
+      }
     this.viewThisPodcast(url, name)
     })
   },

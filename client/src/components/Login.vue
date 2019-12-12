@@ -32,10 +32,8 @@ export default {
   },
   methods: {
     login() {
-      console.log("login.vue - login: pre-axios")
       axios.post('/login', {username: this.username, password: this.password})
       .then((resp) => {
-        console.log("login.vue - post /login")
         if (resp.data.success == false){
           // if the response is a failure, the password wasn't correct - display an error
           this.error = "Your password was entered incorrectly. Try again.";
@@ -45,7 +43,6 @@ export default {
           this.error = "There's no user with that username. Please try again, or register as a new user."
           return;
         } else {
-          console.log('test')
           // otherwise, change the status of $parent.loggedIn and redirect to homepage
           this.username = '';
           this.password = '';
