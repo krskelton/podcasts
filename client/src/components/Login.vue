@@ -4,8 +4,8 @@
       <div v-if="!this.$parent.loggedIn">
       <!-- if there's not currently a user logged in, allow them to log in -->
         <h1>Login</h1>
-        <p>Username:</p><input v-model="username" type="text" />
-        <p>Password:</p><input type="password" v-model="password"/>
+        <p>Username:</p><input v-model="username" @keyup.enter="login()" type="text" />
+        <p>Password:</p><input type="password" v-model="password" @keyup.enter="login()"/>
         <br><br>
         <button @click="login()">Submit</button>
         <div class="error">{{ error }}</div>

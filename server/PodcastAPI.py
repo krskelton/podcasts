@@ -9,10 +9,11 @@ podcast_api = Blueprint('podcast_api', __name__)
 
 @podcast_api.route('/subscriptions', methods=['GET'])
 def serve_all_subscriptions():
-    podcast_instances = db.session.query(Podcast).all()
-    # needs to reference each user_in_session so that only user's subscriptions are shown
-    podcast_items = [{"id": podcast.id, "name": podcast.name, "user_id": podcast.user_id,
-                      "rss_feed_url": podcast.rss_feed_url} for podcast in podcast_instances]
+    user_in_session_username = session['user']
+    user_in_session_db_info = db.session.query(Users).filter(Users.username == user_in_session_username).first()
+    user_id = user_in_session_db_info.id
+    podcast_instances = db.session.query(Podcast).filter(Podcast.user_id == user_id).all()
+    podcast_items = [{"id": podcast.id, "name": podcast.name, "rss_feed_url": podcast.rss_feed_url} for podcast in podcast_instances]
     return jsonify({"name": podcast_items})
 
 
@@ -20,9 +21,9 @@ def serve_all_subscriptions():
 def add_subscription():
     new_podcast = Podcast()
     user_in_session = session['user']
-    username = db.session.query(Users).filter(
-        Users.username == user_in_session).first()
+    username = db.session.query(Users).filter(Users.username==user_in_session).first()
     new_podcast.user_id = username.id
+    new_podcast.podcast_API_id = request.json["podcast_id"]
     new_podcast.name = request.json["name"]
     new_podcast.rss_feed_url = request.json["rss_feed_url"]
     db.session.add(new_podcast)
@@ -31,6 +32,8 @@ def add_subscription():
 
 
 @podcast_api.route('/subscription', methods=['PATCH'])
+# this is going to require an update - this is currently deleting the first instance of 
+# a subscription to a particular podcast rather than the subscription instance relative to the proper user_id
 def remove_subscription():
     pod_id = request.json["id"]
     target_podcast = db.session.query(Podcast).filter_by(id=pod_id).first()

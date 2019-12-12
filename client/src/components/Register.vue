@@ -2,15 +2,20 @@
   <div class="register-component">
     <!-- if a user isn't currently logged in, allow them to register -->
     <h1>Register</h1>
-
     <p>Username:</p>
-    <input v-model="username" type="text" />
+    <input v-model="username" type="text" @keyup.enter="testDuplicateUser()" />
     <p>Password:</p>
-    <input type="password" v-model="password" />
+    <input
+      type="password"
+      v-model="password"
+      @keyup.enter="testDuplicateUser()"
+    />
     <p>Confirm Password:</p>
-    <input type="password" v-model="confirmPassword" />
-    <br />
-    <br />
+    <input
+      type="password"
+      v-model="confirmPassword"
+      @keyup.enter="testDuplicateUser()"
+    /><br /><br />
     <div class="error-message">{{ duplicateUserErrorMessage }}</div>
     <div class="error-message">{{ passwordMatchErrorMessage }}</div>
     <div class="error-message">{{ passwordRequirementsErrorMessage }}</div>
@@ -35,7 +40,6 @@ export default {
   },
   methods: {
     passwordMeetsRequirements() {
-      console.log("I'm inside password meets requirements");
       this.duplicateUserErrorMessage = "";
       this.passwordRequirementsErrorMessage = "";
       this.passwordMatchErrorMessage = "";
@@ -104,4 +108,3 @@ export default {
   font-weight: bold;
 }
 </style>
-
