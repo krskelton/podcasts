@@ -1,7 +1,6 @@
 <template>
   <div class="episodes">
     <h2>{{this.$parent.podcastName}}</h2>
-    <h3>{{this.$parent.podcastFeedURL}}</h3>
     <!--IDEA: add conditional so that subscribe button is disabled if you are already subscribed to that podcast-->
     <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
     <button class="button" @click="subscribeToPodcast($parent.podcastName, $parent.podcastFeedURL)">Subscribe</button>
