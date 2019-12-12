@@ -4,7 +4,7 @@
     <h3>{{this.$parent.podcastFeedURL}}</h3>
     <!--IDEA: add conditional so that subscribe button is disabled if you are already subscribed to that podcast-->
     <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
-    <button class="button" @click="subscribeToPodcast()">Subscribe</button>
+    <button class="button" @click="subscribeToPodcast($parent.podcastName, $parent.podcastFeedURL)">Subscribe</button>
     <ul v-if="!play">
       <li v-for="(episode, index) in episodeList" v-bind:key="index" @click="playEpisode(episode.title, episode.enclosure.url)">
           <div>
@@ -19,7 +19,7 @@
       <audio controls>
         <source :src="musicFile" type="audio/mpeg">
       </audio>
-      <button class="button" style="margin: 20px auto;" @click="getRSSFeed(feedURL)">Return to episodes</button>
+      <button class="button" style="margin: 20px auto;" @click="getRSSFeed(this.$parent.podcastFeedURL)">Return to episodes</button>
     </div>
   </div>
   
@@ -27,43 +27,28 @@
 
 <script>
 import axios from 'axios';
-// import { browseBus } from '../main'
 
 let Parser = require('rss-parser');
 
 export default {
   name: 'Podcast',
-  //The podcastName and feedURL are passed as props from the parent component app.vue
-  // props: {
-  //   podcastName: String,
-  //   feedURL: String,
-  // },
   data() {
     return {
       episodeList:[],
       play: false,
       episodeTitle: '',
       musicFile: '',
-
-      // podcastName: '',
-      // feedURL: ''
     }
   },
   methods:{
-    //subscribeToPodcast adds the podcast to the database
-    // subscribeToPodcast(){
-    //   axios.post('/subscription', {name: this.podcastName, rss_feed_url: this.feedURL})
-    // },
-    // subscribeToPodcast(name, rss_feed_url){
-    //   console.log("podcast.vue - post: ", name, rss_feed_url)
-    //   axios.post('/subscription', {name, rss_feed_url})
-    // },
+    subscribeToPodcast(name, rss_feed_url){
+      axios.post('/subscription', {name, rss_feed_url})
+      this.$router.push('/subscriptions')
+    },
     //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
     getRSSFeed(RSSFEED){
-      console.log("podcast.vue - itunes-api post")
       axios.post('/itunes-api', {rss_feed: RSSFEED})
       .then((data)=>{
-        console.log(data);
           let parser = new Parser();
            parser.parseString(data.data, (err, feed) => {
              if (err) throw err;
@@ -74,7 +59,6 @@ export default {
       
     },
     searchFeedRecieved(feedurl, podcastname){
-      console.log("app.vue searchFeedRecieved", feedurl, podcastname)
       this.podcastName = podcastname;
     },
     //playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
@@ -87,13 +71,7 @@ export default {
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
   mounted(){
     this.getRSSFeed(this.$parent.podcastFeedURL);
-  },
-  // created(){
-  //   browseBus.$on('feedFromBrowse', (url, name) => {
-  //     console.log("app.vue = browseBus arrived!")
-  //     this.viewThisPodcast(url, name)
-  //   })
-  // },
+  }
 }
 </script>
 
