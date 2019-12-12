@@ -32,7 +32,11 @@
       <p>
         <strong>{{ episodeTitle }}</strong>
       </p>
-      <audio controls id="podcast-audio" v-on:play="determinePlaceInTrack()">
+      <audio
+        controls
+        id="podcast-audio"
+        v-on:play="addToHistory() + determinePlaceInTrack()"
+      >
         <source :src="musicFile" type="audio/mpeg" />
       </audio>
       <button
@@ -66,9 +70,11 @@ export default {
   },
   methods: {
     subscribeToPodcast(name, rss_feed_url, podcast_id) {
+      // Podcast_id not being submitted to db.
       axios
         .post("/subscription", { name, rss_feed_url, podcast_id })
         .then(() => {
+          console.log("PODCAST ID; ", podcast_id);
           this.$router.push("/subscriptions");
         });
     },
