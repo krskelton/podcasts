@@ -3,7 +3,7 @@
     <h2>{{this.$parent.podcastName}}</h2>
     <!--IDEA: add conditional so that subscribe button is disabled if you are already subscribed to that podcast-->
     <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
-    <button class="button" @click="subscribeToPodcast($parent.podcastName, $parent.podcastFeedURL)">Subscribe</button>
+    <button class="button" @click="subscribeToPodcast($parent.podcastName, $parent.podcastFeedURL, $parent.podcastId)">Subscribe</button>
     <ul v-if="!play">
       <li v-for="(episode, index) in episodeList" v-bind:key="index" @click="playEpisode(episode.title, episode.enclosure.url)">
           <div>
