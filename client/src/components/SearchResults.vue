@@ -6,8 +6,8 @@
             <button class="button" @click="searchForPodcast">Find Podcast</button>
         </div>
         <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
-            <li @click="sendFeedtoApp(searchResult.feedUrl, searchResult.collectionName)">{{searchResult.collectionName}}
-                <button @click="subscribe(searchResult.feedUrl, searchResult.collectionName)">Subscribe</button>
+            <li @click="sendFeedtoApp(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">{{searchResult.collectionName}}
+                <button @click="subscribe(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">Subscribe</button>
             </li>
         </ul>
     </div>
@@ -31,18 +31,20 @@ export default {
         searchForPodcast(){
             axios.get('https://itunes.apple.com/search?term=' + this.searchTerm + '&country=US&media=podcast')
             .then((data) => {
+                console.log(data)
                 this.searchResults = data.data.results;
             })
         },
-        subscribe(url, name) {
+        subscribe(url, name, podcast_id) {
             this.subscribing = true;
-            this.sendFeedtoApp(url, name)
+            this.sendFeedtoApp(url, name, podcast_id)
         },
-        sendFeedtoApp(url, name){
+        sendFeedtoApp(url, name, podcast_id){
             let isSubscribing = this.subscribing
-            searchBus.$emit('feedFromSearch', url, name, isSubscribing)
+            searchBus.$emit('feedFromSearch', url, name, podcast_id, isSubscribing)
             this.subscribing = false
         },
+
     },
     created() {
         

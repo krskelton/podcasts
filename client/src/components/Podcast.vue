@@ -16,7 +16,7 @@
     <!--The player includes a button to show all the episodes again, tbe title of the episode and a simple html audio player with the mp3 file passed to it.-->
     <div class="player" v-if="play">
       <p><strong>{{episodeTitle}}</strong></p>
-      <audio controls>
+      <audio controls id="podcast-audio" v-on:play="determinePlaceInTrack()">
         <source :src="musicFile" type="audio/mpeg">
       </audio>
       <button class="button" style="margin: 20px auto;" @click="getRSSFeed(this.$parent.podcastFeedURL)">Return to episodes</button>
@@ -41,9 +41,15 @@ export default {
     }
   },
   methods:{
-    subscribeToPodcast(name, rss_feed_url){
-      axios.post('/subscription', {name, rss_feed_url})
-      this.$router.push('/subscriptions')
+    // subscribeToPodcast(name, rss_feed_url){
+    //   axios.post('/subscription', {name, rss_feed_url})
+    //   this.$router.push('/subscriptions')
+    // },
+    subscribeToPodcast(name, rss_feed_url, podcast_id){
+      axios.post('/subscription', {name, rss_feed_url, podcast_id})
+      .then(() => {
+        this.$router.push('/subscriptions')
+      })
     },
     //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
     getRSSFeed(RSSFEED){
@@ -56,7 +62,7 @@ export default {
             this.play = false;
            });
       })
-      
+
     },
     searchFeedRecieved(feedurl, podcastname){
       this.podcastName = podcastname;
@@ -66,7 +72,13 @@ export default {
       this.episodeTitle = title;
       this.musicFile = mp3;
       this.play = true;
-    }
+    },
+    determinePlaceInTrack(){
+      var podcastAudio = document.getElementById('podcast-audio');
+      podcastAudio.ontimeupdate = function(){
+        console.log(podcastAudio.currentTime);
+      }
+    } 
   },
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
   mounted(){

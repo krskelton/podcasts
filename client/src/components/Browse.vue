@@ -89,7 +89,7 @@ export default {
             axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
             .then((data) => {
                 this.podcastFeedUrl = data.data.results[0].feedUrl;
-                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name, this.subscribing);
+                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name, podID, this.subscribing);
             })
         }
     }
