@@ -1,9 +1,11 @@
 from flask import Blueprint, jsonify, request, session
 from sql_alchemy_db_instance import db
-from models import Podcast, Users
+from models import Podcast, Users, PlaylistItems, Playlists, History
 import requests
+from sqlalchemy import func
 
 podcast_api = Blueprint('podcast_api', __name__)
+
 
 @podcast_api.route('/subscriptions', methods=['GET'])
 def serve_all_subscriptions():
@@ -13,6 +15,7 @@ def serve_all_subscriptions():
     podcast_instances = db.session.query(Podcast).filter(Podcast.user_id == user_id).all()
     podcast_items = [{"id": podcast.id, "name": podcast.name, "rss_feed_url": podcast.rss_feed_url} for podcast in podcast_instances]
     return jsonify({"name": podcast_items})
+
 
 @podcast_api.route('/subscription', methods=['POST'])
 def add_subscription():
@@ -26,6 +29,7 @@ def add_subscription():
     db.session.add(new_podcast)
     db.session.commit()
     return jsonify(success=True)
+
 
 @podcast_api.route('/subscription', methods=['PATCH'])
 # this is going to require an update - this is currently deleting the first instance of 
@@ -41,5 +45,6 @@ def remove_subscription():
 @podcast_api.route('/itunes-api', methods=['POST'])
 def get_feed():
     rss_feed = request.json["rss_feed"]
-    podcast_info = requests.get("https://cors-anywhere.herokuapp.com/" + rss_feed, headers={"X-Requested-With": "XMLHttpRequest"})
+    podcast_info = requests.get("https://cors-anywhere.herokuapp.com/" +
+                                rss_feed, headers={"X-Requested-With": "XMLHttpRequest"})
     return podcast_info.content
