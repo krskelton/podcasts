@@ -49,7 +49,7 @@
                 </ul> 
         </ul>
         <ol v-if="viewTopList">
-            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label)">{{topTenPodcast['im:name'].label}}
+            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label, topTenPodcast)">{{topTenPodcast['im:name'].label}}
                 <button @click="subscribing = true">Subscribe</button>
             </li>
         </ol>
@@ -81,7 +81,7 @@ export default {
             })
         },
         //Since the json data in the above response does not return a feedUrl as a variable, the id needs to be parsed out of the url and sent to a different itunes api call that will return the feedUrl. The feedUrl is important because it's what returns the list of episodes.
-        getRSS(url, name){
+        getRSS(url, name, topTenPodcast){
             var match = url.match(/id(\d+)/)
             if (match) var podID = match[1];
             else var podID = url.match(/\d+/);
@@ -89,7 +89,7 @@ export default {
             axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
             .then((data) => {
                 this.podcastFeedUrl = data.data.results[0].feedUrl;
-                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name, podID, this.subscribing);
+                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name, podID, this.subscribing, topTenPodcast);
             })
         }
     }

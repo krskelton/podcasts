@@ -57,16 +57,18 @@ export default {
     };
   },
   methods: {
-    subscribeToPodcast(name, rss_feed_url, podcast_id) {
+    subscribeToPodcast(name, rss_feed_url, podcast_id, topTenPodcast) {
+      console.log(topTenPodcast);
       axios
         .post("/subscription", { name, rss_feed_url, podcast_id })
         .then(() => {
           this.$router.push("/subscriptions");
         });
     },
-    viewThisPodcast(url, name) {
+    viewThisPodcast(url, name, id) {
       this.podcastName = name;
       this.podcastFeedURL = url;
+      this.podcastId = id;
       this.$router.push("/podcast");
     },
     //The methods below simply show components and hide others when the user clicks on elements of the page.
@@ -150,16 +152,16 @@ export default {
         this.subscribeToPodcast(name, url, podcast_id);
         return;
       }
-      this.viewThisPodcast(url, name);
+      this.viewThisPodcast(url, name, podcast_id);
     }),
       browseBus.$on(
         "feedFromBrowse",
-        (url, name, podcast_id, isSubscribing) => {
+        (url, name, podcast_id, isSubscribing, topTenPodcast) => {
           if (isSubscribing === true) {
-            this.subscribeToPodcast(name, url, podcast_id);
+            this.subscribeToPodcast(name, url, podcast_id, topTenPodcast);
             return;
           }
-          this.viewThisPodcast(url, name);
+          this.viewThisPodcast(url, name, podcast_id);
         }
       );
   },
