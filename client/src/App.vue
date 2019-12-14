@@ -11,7 +11,7 @@
       <router-link to="/subscriptions"
         ><img class="icon" src="./assets/images/my-list.png"
       /></router-link>
-      <router-link to="/searchresults" @click="showSearch"
+      <router-link to="/searchresults"
         ><img class="icon" src="./assets/images/search.png"
       /></router-link>
       <router-link to="/browse"
@@ -40,13 +40,6 @@ export default {
   name: "app",
   data() {
     return {
-      viewSubscriptions: false,
-      viewSearch: false,
-      viewBrowse: false,
-      viewPodcast: false,
-      viewHistory: false,
-      viewRegister: false,
-      viewLogin: false,
       podcastName: "",
       podcastFeedURL: "",
       podcastAPIid: "",
@@ -70,59 +63,6 @@ export default {
       this.podcastFeedURL = url;
       this.podcastId = id;
       this.$router.push("/podcast");
-    },
-    //The methods below simply show components and hide others when the user clicks on elements of the page.
-    showRegister() {
-      this.viewSubscriptions = false;
-      this.viewSearch = false;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
-      this.viewRegister = true;
-      this.viewLogin = false;
-      this.viewHistory = false;
-    },
-    showLogin() {
-      this.viewSubscriptions = false;
-      this.viewSearch = false;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
-      this.viewRegister = false;
-      this.viewLogin = true;
-      this.viewHistory = false;
-    },
-    showSubscriptions() {
-      this.viewSubscriptions = true;
-      this.viewSearch = false;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
-      this.viewHistory = false;
-      this.viewRegister = false;
-      this.viewLogin = false;
-    },
-    showSearch() {
-      this.viewSubscriptions = false;
-      this.viewSearch = true;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
-      this.viewHistory = false;
-      this.viewRegister = false;
-      this.viewLogin = false;
-    },
-    showBrowse() {
-      this.viewSubscriptions = false;
-      this.viewSearch = false;
-      this.viewBrowse = true;
-      this.viewPodcast = false;
-      this.viewHistory = false;
-    },
-    showHistory() {
-      this.viewSubscriptions = false;
-      this.viewSearch = false;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
-      this.viewHistory = true;
-      this.viewRegister = false;
-      this.viewLogin = false;
     },
     logout() {
       axios.post("/logout");
