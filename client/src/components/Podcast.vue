@@ -19,7 +19,7 @@
       <li
         v-for="(episode, index) in episodeList"
         v-bind:key="index"
-        @click="playEpisode(episode.title, episode.enclosure.url)"
+        @click="playEpisode(episode) + printData(episode)"
       >
         <div>
           <h3>{{ episode.title }}</h3>
@@ -61,6 +61,9 @@ export default {
   data() {
     return {
       episodeList: [],
+      episodeDisplayed: "",
+      parentPodcastId: "",
+      parentPodcastArtUrl: "",
       play: false,
       episodeTitle: "",
       musicFile: "",
@@ -71,12 +74,19 @@ export default {
   methods: {
     subscribeToPodcast(name, rss_feed_url, podcast_id) {
       // Podcast_id not being submitted to db.
-      axios
-        .post("/subscription", { name, rss_feed_url, podcast_id })
+      axios.post("/subscription", { name, rss_feed_url, podcast_id })
         .then(() => {
           console.log("PODCAST ID; ", podcast_id);
           this.$router.push("/subscriptions");
         });
+    },
+    printData(episode){
+      let lookup_parent_podcast_url = "https://itunes.apple.com/lookup?id=" + this.$parent.podcastId + '&entity=podcast'
+      axios.get("https://cors-anywhere.herokuapp.com/" + lookup_parent_podcast_url)
+      .then((data) => {
+        this.parentPodcastArtUrl = data.data.results[0].artworkUrl100;
+      })
+      // console.log(episode.itunes.summary, episode.link, episode.title);
     },
     //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
     getRSSFeed(RSSFEED) {
@@ -90,23 +100,22 @@ export default {
       });
     },
     addToHistory() {
+      console.log(this.episodeDisplayed);
       let timestamp = Sugar.Date.format(
         new Date(Date.now()),
         "%Y-%m-%d %H:%M:%S"
       );
       this.timeDateAccessed = timestamp;
-      axios.post("/add-to-history", {
-        episode_title: this.episodeTitle,
-        time_date: this.timeDateAccessed
-      });
+      axios.post("/add-to-history", {episode_title: this.episodeTitle, episode_summary: this.episodeDisplayed.itunes.summary, episode_url: this.episodeDisplayed.enclosure.url, time_date: this.timeDateAccessed, parent_podcast_id: this.$parent.podcastId, parent_podcast_art_url: this.parentPodcastArtUrl});
     },
     searchFeedRecieved(feedurl, podcastname) {
       this.podcastName = podcastname;
     },
     // playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
-    playEpisode(title, mp3) {
-      this.episodeTitle = title;
-      this.musicFile = mp3;
+    playEpisode(episode) {
+      this.episodeDisplayed = episode;
+      this.episodeTitle = episode.title;
+      this.musicFile = episode.enclosure.url;
       this.play = true;
     },
     determinePlaceInTrack() {
