@@ -28,7 +28,6 @@ export default {
       axios
         .get("/my-history")
         .then(res => (this.myHistory = res.data.my_history_list));
-        console.log("getMyHistory")
     }
   },
   mounted() {
