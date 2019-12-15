@@ -1,5 +1,5 @@
 <template>
-    <div class="search-results">
+    <div id="nav-margin" class="search-results">
         <h2>Find Podcast</h2>
         <div class="search">
             <input v-model="searchTerm" @keyup.enter="searchForPodcast"/>

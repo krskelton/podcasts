@@ -42,13 +42,13 @@
                     <li @click="getTopTenList('1565')">Film Interviews</li>
                 </ul>
             <li @click="getTopTenList('1310')">Music</li>
-                <ul>
+                <ul id="nav-margin">
                     <li @click="getTopTenList('1523')">Music Commentary</li>
                     <li @click="getTopTenList('1524')">Music History</li>
-                    <li @click="getTopTenList('1525')">Music Interviews</li>
+                    <li  @click="getTopTenList('1525')">Music Interviews</li>
                 </ul> 
         </ul>
-        <ol v-if="viewTopList">
+        <ol id="nav-margin" v-if="viewTopList">
             <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label)">{{topTenPodcast['im:name'].label}}
                 <button @click="subscribing = true">Subscribe</button>
             </li>

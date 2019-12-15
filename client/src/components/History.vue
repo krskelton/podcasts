@@ -2,7 +2,7 @@
   <!-- list of user's History, aka any audio feed clicked 'play'.-->
   <div>
     <h2>My Listening History</h2>
-    <ul>
+    <ul id="nav-margin">
       <li v-for="item in myHistory">
         <span>{{ item.episode_id }}</span>
         <!-- would like to format the viewing of time stamp to be cleaner (take off GMT)  -->
@@ -28,6 +28,7 @@ export default {
       axios
         .get("/my-history")
         .then(res => (this.myHistory = res.data.my_history_list));
+        console.log("getMyHistory")
     }
   },
   mounted() {
