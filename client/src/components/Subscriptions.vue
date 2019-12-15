@@ -1,7 +1,7 @@
 <template>
   <div class="subscriptions">
     <h2>Subscriptions</h2>
-    <ul id="nav-margin">
+    <ul>
       <li
         v-for="(subscription, index) in subscriptions"
         v-bind:key="subscription.id"

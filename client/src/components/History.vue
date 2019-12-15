@@ -2,7 +2,7 @@
   <!-- list of user's History, aka any audio feed clicked 'play'.-->
   <div>
     <h2>My Listening History</h2>
-    <ul id="nav-margin">
+    <ul>
       <li v-for="item in myHistory">
         <span>{{ item.episode_id }}</span>
         <!-- would like to format the viewing of time stamp to be cleaner (take off GMT)  -->
