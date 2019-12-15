@@ -45,7 +45,7 @@
                 <ul>
                     <li @click="getTopTenList('1523')">Music Commentary</li>
                     <li @click="getTopTenList('1524')">Music History</li>
-                    <li  @click="getTopTenList('1525')">Music Interviews</li>
+                    <li @click="getTopTenList('1525')">Music Interviews</li>
                 </ul> 
         </ul>
         <ol v-if="viewTopList">
