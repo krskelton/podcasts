@@ -131,7 +131,7 @@ export default {
           clearInterval(interval);
           this.trackPlaying = false;
         }
-      }, 1000)
+      }, 5000)
     }
   },
 
