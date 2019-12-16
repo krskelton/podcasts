@@ -41,5 +41,6 @@ class History(db.Model):
     episode_summary = db.Column(db.String)
     episode_url = db.Column(db.String)
     time_stamp_accessed = db.Column(db.DateTime, default=datetime.now())
+    current_time_listened = db.Column(db.Integer)
     parent_podcast_id = db.Column(db.Integer)
     parent_podcast_art_url = db.Column(db.String)
