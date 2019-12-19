@@ -16,7 +16,9 @@
 
 <script>
 import axios from "axios";
-//import { bus } from "../main";
+
+import { subscriptionBus } from '../main'
+
 export default {
   name: "Subscriptions",
   data() {
@@ -39,7 +41,7 @@ export default {
     },
     //this.$emit sends the data to parent component
     sendFeedtoParent(url, name) {
-      this.$emit("feedFromSubscription", url, name);
+      subscriptionBus.$emit("feedFromSubscription", name, url);
     }
   },
   //getSubscriptions is mounted so it will load when the Subscriptions component becomes visible

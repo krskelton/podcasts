@@ -15,6 +15,7 @@ export const searchBus = new Vue();
 export const browseBus = new Vue();
 export const historyBus = new Vue();
 export const podcastBus = new Vue();
+export const subscriptionBus = new Vue();
 
 Vue.config.productionTip = false;
 
