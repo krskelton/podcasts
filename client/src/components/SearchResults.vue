@@ -29,7 +29,8 @@ export default {
     methods: {
         //searchForPodcast adds the searchTerm from the user to make a call to the itunes api. The data from this response is capped at 50 responses. This can be changed by setting the parameter in the itunes url though.
         searchForPodcast(){
-            axios.get('https://itunes.apple.com/search?term=' + this.searchTerm + '&country=US&media=podcast')
+            let searchUrl = 'https://itunes.apple.com/search?term=' + this.searchTerm + '&country=US&media=podcast'
+            axios.get("https://cors-anywhere.herokuapp.com/" + searchUrl)
             .then((data) => {
                 console.log(data)
                 this.searchResults = data.data.results;

@@ -49,7 +49,7 @@
                 </ul> 
         </ul>
         <ol v-if="viewTopList">
-            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label)">{{topTenPodcast['im:name'].label}}
+            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label, topTenPodcast)">{{topTenPodcast['im:name'].label}}
                 <button @click="subscribing = true">Subscribe</button>
             </li>
         </ol>
