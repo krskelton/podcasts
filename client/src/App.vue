@@ -34,7 +34,7 @@ import Login from "./components/Login.vue";
 import History from "./components/History.vue";
 import axios from "axios";
 
-import { searchBus, browseBus, historyBus } from "./main";
+import { searchBus, browseBus, historyBus, podcastBus } from "./main";
 
 export default {
   name: "app",
@@ -57,7 +57,7 @@ export default {
           this.$router.push("/subscriptions");
         });
     },
-    viewThisPodcast(url, name, id) {
+    viewThisPodcast(name, url, id) {
       this.podcastName = name;
       this.podcastFeedURL = url;
       this.podcastId = id;
@@ -81,28 +81,27 @@ export default {
       });
       // these lines ensure that the promise resolves before adjusting the value of this.loggedIn (accounts for asynch)
       let result = await promise;
-      console.log(result);
       return result;
     }
   },
   created() {
-    searchBus.$on("feedFromSearch", (url, name, podcast_id, isSubscribing) => {
+    podcastBus.$on("feedFromPodcast", () => {
+      this.subscribeToPodcast(this.podcastName, this.podcastFeedURL, this.podcastId)
+    }),
+    searchBus.$on("feedFromSearch", (name, url, podcast_id, isSubscribing) => {
       if (isSubscribing === true) {
         this.subscribeToPodcast(name, url, podcast_id);
         return;
       }
-      this.viewThisPodcast(url, name, podcast_id);
+      this.viewThisPodcast(name, url, podcast_id);
     }),
-      browseBus.$on(
-        "feedFromBrowse",
-        (url, name, podcast_id, isSubscribing) => {
-          if (isSubscribing === true) {
-            this.subscribeToPodcast(name, url, podcast_id);
-            return;
-          }
-          this.viewThisPodcast(url, name, podcast_id);
-        }
-      );
+    browseBus.$on("feedFromBrowse", (name, url, podcast_id, isSubscribing) => {
+      if (isSubscribing === true) {
+        this.subscribeToPodcast(name, url, podcast_id);
+        return;
+      }
+      this.viewThisPodcast(name, url, podcast_id);
+    })
   },
   components: {
     Subscriptions,

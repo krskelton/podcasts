@@ -14,6 +14,7 @@ Vue.use(VueRouter);
 export const searchBus = new Vue();
 export const browseBus = new Vue();
 export const historyBus = new Vue();
+export const podcastBus = new Vue();
 
 Vue.config.productionTip = false;
 

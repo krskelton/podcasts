@@ -84,12 +84,12 @@ export default {
         getRSS(url, name){
             var match = url.match(/id(\d+)/)
             if (match) var podID = match[1];
-            else var podID = url.match(/\d+/);
+            else podID = url.match(/\d+/);
 
             axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
             .then((data) => {
                 this.podcastFeedUrl = data.data.results[0].feedUrl;
-                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name, podID, this.subscribing);
+                browseBus.$emit('feedFromBrowse', name, this.podcastFeedUrl, podID, this.subscribing);
             })
         }
     }
