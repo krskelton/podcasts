@@ -81,7 +81,7 @@ export default {
             })
         },
         //Since the json data in the above response does not return a feedUrl as a variable, the id needs to be parsed out of the url and sent to a different itunes api call that will return the feedUrl. The feedUrl is important because it's what returns the list of episodes.
-        getRSS(url, name, topTenPodcast){
+        getRSS(url, name){
             var match = url.match(/id(\d+)/)
             if (match) var podID = match[1];
             else var podID = url.match(/\d+/);
@@ -89,7 +89,7 @@ export default {
             axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
             .then((data) => {
                 this.podcastFeedUrl = data.data.results[0].feedUrl;
-                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name, podID, this.subscribing, topTenPodcast);
+                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name, podID, this.subscribing);
             })
         }
     }

@@ -50,8 +50,7 @@ export default {
     };
   },
   methods: {
-    subscribeToPodcast(name, rss_feed_url, podcast_id, topTenPodcast) {
-      console.log(topTenPodcast);
+    subscribeToPodcast(name, rss_feed_url, podcast_id) {
       axios
         .post("/subscription", { name, rss_feed_url, podcast_id })
         .then(() => {
@@ -96,9 +95,9 @@ export default {
     }),
       browseBus.$on(
         "feedFromBrowse",
-        (url, name, podcast_id, isSubscribing, topTenPodcast) => {
+        (url, name, podcast_id, isSubscribing) => {
           if (isSubscribing === true) {
-            this.subscribeToPodcast(name, url, podcast_id, topTenPodcast);
+            this.subscribeToPodcast(name, url, podcast_id);
             return;
           }
           this.viewThisPodcast(url, name, podcast_id);
