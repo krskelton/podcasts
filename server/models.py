@@ -18,7 +18,7 @@ class Podcast(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     name = db.Column(db.String(500))
     rss_feed_url = db.Column(db.String(2000))
-    
+    podcast_API_id = db.Column(db.Integer)
 
 class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)

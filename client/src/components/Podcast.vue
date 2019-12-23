@@ -5,7 +5,7 @@
     <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
     <button
       class="button"
-      @click="subscribeToPodcast()">
+      @click="sendToSubscribe()">
       Subscribe
     </button>
     <ul v-if="!play">
@@ -75,15 +75,9 @@ export default {
     registerPause(){
       this.trackPlaying = false;
     },
-    subscribeToPodcast() {
+    sendToSubscribe() {
       podcastBus.$emit('feedFromPodcast');
     },
-    // subscribeToPodcast(name, rss_feed_url, podcast_id) {
-    //   axios.post("/subscription", { name, rss_feed_url, podcast_id })
-    //     .then(() => {
-    //       this.$router.push("/subscriptions");
-    //     });
-    // },
     getParentPodcastData(episode){
       let lookup_parent_podcast_url = "https://itunes.apple.com/lookup?id=" + this.$parent.podcastId + '&entity=podcast'
       axios.get("https://cors-anywhere.herokuapp.com/" + lookup_parent_podcast_url)

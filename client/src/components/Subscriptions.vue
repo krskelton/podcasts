@@ -5,7 +5,7 @@
       <li
         v-for="(subscription, index) in subscriptions"
         v-bind:key="subscription.id"
-        @click="sendFeedtoParent(subscription.rss_feed_url, subscription.name)"
+        @click="sendFeedtoParent(subscription.name, subscription.rss_feed_url, subscription.podcast_API_id)"
       >
         <span>{{ subscription.name }}</span>
         <button class="button" @click="removeSubscription(subscription.id)">Unsubscribe</button>
@@ -23,7 +23,8 @@ export default {
   name: "Subscriptions",
   data() {
     return {
-      subscriptions: []
+      subscriptions: [],
+      isUnsubscribing: false
     };
   },
   methods: {
@@ -35,13 +36,18 @@ export default {
     },
     //Remove a subsciption from the database
     removeSubscription(id) {
+      this.isUnsubscribing = true
       axios
         .patch("/subscription", { id: id })
         .then(() => this.getSubscriptions());
     },
     //this.$emit sends the data to parent component
-    sendFeedtoParent(url, name) {
-      subscriptionBus.$emit("feedFromSubscription", name, url);
+    sendFeedtoParent(name, url, podcast_id) {
+      if (this.isUnsubscribing !== true) {
+        this.isUnsubscribing = false;
+        subscriptionBus.$emit("feedFromSubscription", name, url, podcast_id);
+      }
+      this.isUnsubscribing = false;
     }
   },
   //getSubscriptions is mounted so it will load when the Subscriptions component becomes visible

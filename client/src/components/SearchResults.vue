@@ -7,7 +7,7 @@
         </div>
         <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
             <li @click="sendFeedtoApp(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">{{searchResult.collectionName}}
-                <button @click="subscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">Subscribe</button>
+                <button @click="sendToSubscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">Subscribe</button>
             </li>
         </ul>
     </div>
@@ -35,11 +35,12 @@ export default {
                 this.searchResults = data.data.results;
             })
         },
-        subscribe(name, url, podcast_id) {
+        sendToSubscribe(name, url, podcast_id) {
             this.isSubscribing = true;
             this.sendFeedtoApp(name, url, podcast_id)
         },
         sendFeedtoApp(name, url, podcast_id){
+            console.log("SR send ", name, url, podcast_id)
             searchBus.$emit('feedFromSearch', name, url, podcast_id, this.isSubscribing)
             this.isSubscribing = false
         },

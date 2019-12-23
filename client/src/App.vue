@@ -58,7 +58,6 @@ export default {
         });
     },
     getRSS(name, url, isSubscribing){
-      console.log(name, url)
       var match = url.match(/id(\d+)/)
       if (match) var podID = match[1];
       else podID = url.match(/\d+/);
@@ -69,7 +68,6 @@ export default {
           this.podcastId = podID;
           this.podcastName = name
           this.podcastFeedURL = this.podcastFeedUrl
-          console.log(this.podcastName, this.podcastFeedURL, this.podcastId)
           // browseBus.$emit('feedFromBrowse', name, this.podcastFeedUrl, podID, this.subscribing);
           if (isSubscribing === true) {
             this.subscribeToPodcast(this.podcastName, this.podcastFeedURL, this.podcastId);
@@ -78,11 +76,9 @@ export default {
       })
     },
     viewThisPodcast(name, url, id) {
-      console.log(name, url, id)
       this.podcastName = name;
       this.podcastFeedURL = url;
       this.podcastId = id;
-      console.log("view: ", this.podcastName, this.podcastFeedURL, this.podcastId)
       this.$router.push("/podcast");
     },
     logout() {
@@ -110,8 +106,8 @@ export default {
     podcastBus.$on("feedFromPodcast", () => {
       this.subscribeToPodcast(this.podcastName, this.podcastFeedURL, this.podcastId)
     }),
-    subscriptionBus.$on("feedFromSubscription", () => {
-      
+    subscriptionBus.$on("feedFromSubscription", (name, url, podcast_id, isUnsubscribing) => {
+      this.viewThisPodcast(name, url, podcast_id)
     }),
     searchBus.$on("feedFromSearch", (name, url, podcast_id, isSubscribing) => {
       if (isSubscribing === true) {
