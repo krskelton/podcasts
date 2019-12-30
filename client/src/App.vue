@@ -34,7 +34,7 @@ import Login from "./components/Login.vue";
 import History from "./components/History.vue";
 import axios from "axios";
 
-import { searchBus, browseBus, historyBus } from "./main";
+import { searchBus, browseBus, historyBus, podcastBus, subscriptionBus } from "./main";
 
 export default {
   name: "app",
@@ -57,7 +57,25 @@ export default {
           this.$router.push("/subscriptions");
         });
     },
-    viewThisPodcast(url, name, id) {
+    getRSS(name, url, isSubscribing){
+      var match = url.match(/id(\d+)/)
+      if (match) var podID = match[1];
+      else podID = url.match(/\d+/);
+
+      axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
+      .then((data) => {
+          this.podcastFeedUrl = data.data.results[0].feedUrl;
+          this.podcastId = podID;
+          this.podcastName = name
+          this.podcastFeedURL = this.podcastFeedUrl
+          // browseBus.$emit('feedFromBrowse', name, this.podcastFeedUrl, podID, this.subscribing);
+          if (isSubscribing === true) {
+            this.subscribeToPodcast(this.podcastName, this.podcastFeedURL, this.podcastId);
+          }
+          this.viewThisPodcast(this.podcastName, this.podcastFeedURL, this.podcastId);
+      })
+    },
+    viewThisPodcast(name, url, id) {
       this.podcastName = name;
       this.podcastFeedURL = url;
       this.podcastId = id;
@@ -81,28 +99,26 @@ export default {
       });
       // these lines ensure that the promise resolves before adjusting the value of this.loggedIn (accounts for asynch)
       let result = await promise;
-      console.log(result);
       return result;
     }
   },
   created() {
-    searchBus.$on("feedFromSearch", (url, name, podcast_id, isSubscribing) => {
+    podcastBus.$on("feedFromPodcast", () => {
+      this.subscribeToPodcast(this.podcastName, this.podcastFeedURL, this.podcastId)
+    }),
+    subscriptionBus.$on("feedFromSubscription", (name, url, podcast_id, isUnsubscribing) => {
+      this.viewThisPodcast(name, url, podcast_id)
+    }),
+    searchBus.$on("feedFromSearch", (name, url, podcast_id, isSubscribing) => {
       if (isSubscribing === true) {
         this.subscribeToPodcast(name, url, podcast_id);
         return;
       }
-      this.viewThisPodcast(url, name, podcast_id);
+      this.viewThisPodcast(name, url, podcast_id);
     }),
-      browseBus.$on(
-        "feedFromBrowse",
-        (url, name, podcast_id, isSubscribing) => {
-          if (isSubscribing === true) {
-            this.subscribeToPodcast(name, url, podcast_id);
-            return;
-          }
-          this.viewThisPodcast(url, name, podcast_id);
-        }
-      );
+    browseBus.$on("feedFromBrowse", (name, url, isSubscribing) => {
+      this.getRSS(name, url, isSubscribing)
+    })
   },
   components: {
     Subscriptions,

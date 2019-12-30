@@ -5,7 +5,7 @@
     <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
     <button
       class="button"
-      @click="subscribeToPodcast($parent.podcastName, $parent.podcastFeedURL, $parent.podcastId)">
+      @click="sendToSubscribe()">
       Subscribe
     </button>
     <ul v-if="!play">
@@ -40,6 +40,8 @@ import axios from "axios";
 var Sugar = require("sugar");
 let Parser = require("rss-parser");
 
+import { podcastBus } from '../main'
+
 export default {
   name: "Podcast",
   data() {
@@ -73,11 +75,8 @@ export default {
     registerPause(){
       this.trackPlaying = false;
     },
-    subscribeToPodcast(name, rss_feed_url, podcast_id) {
-      axios.post("/subscription", { name, rss_feed_url, podcast_id })
-        .then(() => {
-          this.$router.push("/subscriptions");
-        });
+    sendToSubscribe() {
+      podcastBus.$emit('feedFromPodcast');
     },
     getParentPodcastData(episode){
       let lookup_parent_podcast_url = "https://itunes.apple.com/lookup?id=" + this.$parent.podcastId + '&entity=podcast'
@@ -117,10 +116,8 @@ export default {
       // this part was necessary to prevent multiple instances of determinePlaceInTrack() from running when a user scrubs through audio
       // without this, the db would be updated multiple times per second if a user scrubs through audio multiple times
       if (this.trackPlaying == true){
-        console.log("something's wrong")
         return;
       }
-      console.log("inside determine")
       this.trackPlaying = true;
       let podcastAudio = document.getElementById("podcast-audio");
       let interval = setInterval(function(){

@@ -20,7 +20,6 @@ class Podcast(db.Model):
     rss_feed_url = db.Column(db.String(2000))
     podcast_API_id = db.Column(db.Integer)
 
-
 class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(500))

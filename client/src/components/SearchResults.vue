@@ -6,8 +6,8 @@
             <button class="button" @click="searchForPodcast">Find Podcast</button>
         </div>
         <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
-            <li @click="sendFeedtoApp(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">{{searchResult.collectionName}}
-                <button @click="subscribe(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">Subscribe</button>
+            <li @click="sendFeedtoApp(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">{{searchResult.collectionName}}
+                <button @click="sendToSubscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">Subscribe</button>
             </li>
         </ul>
     </div>
@@ -23,7 +23,7 @@ export default {
         return {
             searchTerm: '',
             searchResults: [],
-            subscribing: false
+            isSubscribing: false
         }
     },
     methods: {
@@ -32,18 +32,17 @@ export default {
             let searchUrl = 'https://itunes.apple.com/search?term=' + this.searchTerm + '&country=US&media=podcast'
             axios.get("https://cors-anywhere.herokuapp.com/" + searchUrl)
             .then((data) => {
-                console.log(data)
                 this.searchResults = data.data.results;
             })
         },
-        subscribe(url, name, podcast_id) {
-            this.subscribing = true;
-            this.sendFeedtoApp(url, name, podcast_id)
+        sendToSubscribe(name, url, podcast_id) {
+            this.isSubscribing = true;
+            this.sendFeedtoApp(name, url, podcast_id)
         },
-        sendFeedtoApp(url, name, podcast_id){
-            let isSubscribing = this.subscribing
-            searchBus.$emit('feedFromSearch', url, name, podcast_id, isSubscribing)
-            this.subscribing = false
+        sendFeedtoApp(name, url, podcast_id){
+            console.log("SR send ", name, url, podcast_id)
+            searchBus.$emit('feedFromSearch', name, url, podcast_id, this.isSubscribing)
+            this.isSubscribing = false
         },
 
     },
