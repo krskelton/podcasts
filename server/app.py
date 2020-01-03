@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from PodcastAPI import podcast_api, Podcast
 from usersAPI import users_api
 from HistoryAPI import history_api
+from PlaylistsAPI import playlists_api, playlist_items_api, Playlists, PlaylistItems
 from sql_alchemy_db_instance import db
 
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -29,6 +30,8 @@ def create_app():
     app.register_blueprint(podcast_api)
     app.register_blueprint(users_api)
     app.register_blueprint(history_api)
+    app.register_blueprint(playlists_api)
+    app.register_blueprint(playlist_items_api)
 
     return app
 

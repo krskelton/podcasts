@@ -68,7 +68,7 @@ export default {
             topTenPodcasts: [], 
             podcastFeedUrl: '',
             viewTopList: false,
-            subscribing: false
+            subscribing: false,
         }        
     },
     methods: {
@@ -81,7 +81,7 @@ export default {
             })
         },
         sendFeed(name, url) {
-            browseBus.$emit('feedFromBrowse', name, url, this.subscribing);
+            browseBus.$emit('feedFromBrowse', name, url, this.subscribing, this.addingToPlaylist);
         }
     }
 }

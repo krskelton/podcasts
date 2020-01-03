@@ -29,8 +29,9 @@ class Playlists(db.Model):
 class PlaylistItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     playlist_id = db.Column(db.Integer, db.ForeignKey("playlists.id"))
-    podcast_API_id = db.Column(db.Integer)
-    episode_id = db.Column(db.Integer)
+    episode_title = db.Column(db.String)
+    episode_summary = db.Column(db.String)
+    episode_url = db.Column(db.String)
 
 
 class History(db.Model):

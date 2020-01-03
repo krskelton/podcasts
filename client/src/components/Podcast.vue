@@ -16,7 +16,12 @@
       >
         <div>
           <h3>{{ episode.title }}</h3>
-          <p>{{ episode.description }}</p>
+  <!-- <select v-model="chosenTimezoneNumber" @click="selectTimezone">
+          <option v-for="(zone, key) in zones" :value="key">
+            {{ zone }}
+          </option>
+        </select> -->
+          <button @click="sendToPlaylist(episode.title, episode.content, episode.link)">Add to playlist</button>
         </div>
       </li>
     </ul>
@@ -25,6 +30,7 @@
       <p>
         <strong>{{ episodeTitle }}</strong>
       </p>
+      <p>{{ episodeDescription }}</p>
       <audio controls id="podcast-audio" @play="testDuplicateHistoryEntry()" @pause="registerPause()">
         <source :src="musicFile" type="audio/mpeg" />
       </audio>
@@ -40,7 +46,7 @@ import axios from "axios";
 var Sugar = require("sugar");
 let Parser = require("rss-parser");
 
-import { podcastBus } from '../main'
+import { podcastBus, playlistBus } from '../main'
 
 export default {
   name: "Podcast",
@@ -52,13 +58,28 @@ export default {
       parentPodcastArtUrl: "",
       play: false,
       episodeTitle: "",
+      episodeDescription: "",
       musicFile: "",
       timeDateAccessed: "",
-      trackPlaying: false,
-      d: ""
+      trackPlaying: false
     };
   },
   methods: {
+    // updateZones() {
+    //   axios.get("http://worldtimeapi.org/api/timezone")
+    //   .then((response) => {
+    //     this.zones = response.data
+    //   })
+    // },
+    getPlaylists() {
+      axios.get("/playlists")
+      .then((response) => {
+        let currentResponse = response.data.playlist_info;
+        for (let i = 0; i < currentResponse.length; i++) {
+          //Work here...
+        }
+      })
+    },
     testDuplicateHistoryEntry() {
       // before adding a new user to DB, make sure that username isn't already taken
       axios.post("/duplicate-history-entry-test", { episode_title: this.episodeTitle })
@@ -78,11 +99,16 @@ export default {
     sendToSubscribe() {
       podcastBus.$emit('feedFromPodcast');
     },
+    sendToPlaylist(episode_title, episode_description, episode_url) {
+      console.log("Podcast.vue - sendToPlaylist ")
+      playlistBus.$emit('playlistFromPodcast', episode_title, episode_description, episode_url);
+    },
     getParentPodcastData(episode){
       let lookup_parent_podcast_url = "https://itunes.apple.com/lookup?id=" + this.$parent.podcastId + '&entity=podcast'
       axios.get("https://cors-anywhere.herokuapp.com/" + lookup_parent_podcast_url)
       .then((data) => {
         this.parentPodcastArtUrl = data.data.results[0].artworkUrl100;
+        console.log("Test art url ", this.parentPodcastArtUrl)
       })
     },
     //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
@@ -92,6 +118,7 @@ export default {
         parser.parseString(data.data, (err, feed) => {
           if (err) throw err;
           this.episodeList = feed.items;
+          console.log("rssFeed episodeList ", this.episodeList)
           this.play = false;
         });
       });
@@ -109,6 +136,7 @@ export default {
     playEpisode(episode) {
       this.episodeDisplayed = episode;
       this.episodeTitle = episode.title;
+      this.episodeDescription = episode.content;
       this.musicFile = episode.enclosure.url;
       this.play = true;
     },
