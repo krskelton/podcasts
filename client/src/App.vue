@@ -36,7 +36,7 @@ import History from "./components/History.vue";
 import Playlists from "./components/Playlists.vue";
 import axios from "axios";
 
-import { searchBus, browseBus, historyBus, podcastBus, subscriptionBus, playlistBus } from "./main";
+import { searchBus, browseBus, historyBus, podcastBus, subscriptionBus } from "./main";
 
 export default {
   name: "app",
@@ -50,26 +50,12 @@ export default {
       episodeDescription: "",
       episodeUrl: "",
       episodeDisplayed: "",
-      playlistArtUrl: "",
       timeDateAccessed: "",
       podcastId: "",
       loggedIn: false
     };
   },
   methods: {
-    addToPlaylist() {
-      console.log("add")
-      axios.post("/playlists", { name })
-      .then(() => {
-        console.log("test")
-        // Working on axios.post below
-        // *****************************
-        axios.post("/playlist_items", { episode_title: this.episodeTitle, episode_description: this.episodeDescription, episode_url: this.episodeUrl })
-        .then(() => {
-          this.$router.push("/playlists");
-        })
-      })
-    },
     subscribeToPodcast(name, rss_feed_url, podcast_id) {
       axios
         .post("/subscription", { name, rss_feed_url, podcast_id })
@@ -138,12 +124,6 @@ export default {
     }),
     browseBus.$on("feedFromBrowse", (name, url, isSubscribing) => {
       this.getRSS(name, url, isSubscribing)
-    }),
-    playlistBus.$on("playlistFromPodcast", (episode_title, episode_description, episode_url) => {
-      this.episodeTitle = episode_title;
-      this.episodeDescription = episode_description;
-      this.episodeUrl = episode_url;
-      this.addToPlaylist()
     })
   },
   components: {

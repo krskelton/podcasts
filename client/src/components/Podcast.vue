@@ -16,12 +16,12 @@
       >
         <div>
           <h3>{{ episode.title }}</h3>
-  <!-- <select v-model="chosenTimezoneNumber" @click="selectTimezone">
-          <option v-for="(zone, key) in zones" :value="key">
-            {{ zone }}
-          </option>
-        </select> -->
-          <button @click="sendToPlaylist(episode.title, episode.content, episode.link)">Add to playlist</button>
+            <select>
+              <option v-for="playlist in userPlaylists" :value="playlist.id" :key="playlist.id">
+                {{ playlist.title }}
+              </option>
+            </select>
+          <button @click="getEpisode(episode) + addToPlaylist($event)">Add to playlist</button>
         </div>
       </li>
     </ul>
@@ -30,7 +30,7 @@
       <p>
         <strong>{{ episodeTitle }}</strong>
       </p>
-      <p>{{ episodeDescription }}</p>
+      <div v-html="episodeDescription"></div>
       <audio controls id="podcast-audio" @play="testDuplicateHistoryEntry()" @pause="registerPause()">
         <source :src="musicFile" type="audio/mpeg" />
       </audio>
@@ -46,7 +46,7 @@ import axios from "axios";
 var Sugar = require("sugar");
 let Parser = require("rss-parser");
 
-import { podcastBus, playlistBus } from '../main'
+import { podcastBus } from '../main'
 
 export default {
   name: "Podcast",
@@ -59,25 +59,25 @@ export default {
       play: false,
       episodeTitle: "",
       episodeDescription: "",
+      episodeUrl: "",
       musicFile: "",
       timeDateAccessed: "",
-      trackPlaying: false
+      trackPlaying: false,
+      userPlaylists: [],
     };
   },
   methods: {
-    // updateZones() {
-    //   axios.get("http://worldtimeapi.org/api/timezone")
-    //   .then((response) => {
-    //     this.zones = response.data
-    //   })
-    // },
-    getPlaylists() {
+    getAndSetUserPlaylists() {
       axios.get("/playlists")
       .then((response) => {
-        let currentResponse = response.data.playlist_info;
-        for (let i = 0; i < currentResponse.length; i++) {
-          //Work here...
-        }
+        this.userPlaylists = response.data.playlists;
+      })
+    },
+    addToPlaylist(event) {
+      let playlistID = event.target.value;
+      axios.post("/playlist_items", { episode_title: this.episodeTitle, episode_description: this.episodeDescription, episode_url: this.episodeUrl, playlist_id: playlistID })
+      .then(() => {
+        // this.$router.push("/playlists");
       })
     },
     testDuplicateHistoryEntry() {
@@ -99,16 +99,11 @@ export default {
     sendToSubscribe() {
       podcastBus.$emit('feedFromPodcast');
     },
-    sendToPlaylist(episode_title, episode_description, episode_url) {
-      console.log("Podcast.vue - sendToPlaylist ")
-      playlistBus.$emit('playlistFromPodcast', episode_title, episode_description, episode_url);
-    },
     getParentPodcastData(episode){
       let lookup_parent_podcast_url = "https://itunes.apple.com/lookup?id=" + this.$parent.podcastId + '&entity=podcast'
       axios.get("https://cors-anywhere.herokuapp.com/" + lookup_parent_podcast_url)
       .then((data) => {
         this.parentPodcastArtUrl = data.data.results[0].artworkUrl100;
-        console.log("Test art url ", this.parentPodcastArtUrl)
       })
     },
     //The request to the iTunes API to get the RSS feed is made in PodcastAPI.py file because of an error with some podcasts returning html instead of XML. In Flask we can set the Headers so that we only get an XMLHttpRequest reponse, which is what we need in order for the rss-parser library to parse the response below.
@@ -132,8 +127,15 @@ export default {
     searchFeedRecieved(feedurl, podcastname) {
       this.podcastName = podcastname;
     },
+    getEpisode(episode) {
+      console.log("getEpisode ", episode);
+      this.episodeTitle = episode.title;
+      this.episodeDescription = episode.content;
+      this.episodeUrl = episode.enclosure.url;
+    },
     // playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
     playEpisode(episode) {
+      console.log("here ", episode)
       this.episodeDisplayed = episode;
       this.episodeTitle = episode.title;
       this.episodeDescription = episode.content;
@@ -163,6 +165,7 @@ export default {
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
   mounted() {
     this.getRSSFeed(this.$parent.podcastFeedURL);
+    this.getAndSetUserPlaylists();
   }
 };
 </script>

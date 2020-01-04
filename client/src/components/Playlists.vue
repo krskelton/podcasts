@@ -1,8 +1,13 @@
 <template>
     <div>
         <h3>Playlists</h3>
+        <p>Create new playlist</p>
         <input v-model="playlistTitle" @keyup.enter="createPlaylist()" type="text" />
         <button @click="createPlaylist()">Create playlist</button>
+        <p>View playlists</p>
+        <!-- <ul>
+            <li v-for="(playlist, index) in playlists" v-bind:key="index">{{playlist.name}}
+        </ul> -->
     </div>
 </template>
 
@@ -18,10 +23,11 @@ export default {
     },
     data() {
         return{
+            playlists: [],
             playlistID: null,
             playlistAPIID: null,
             episodeID: null,
-            playlistTitle: "Playlist title"
+            playlistTitle: ""
         }
     },
     methods: {
