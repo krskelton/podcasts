@@ -46,7 +46,8 @@ export default {
       episodeTitle: "",
       timeDateAccessed: "",
       podcastId: "",
-      loggedIn: false
+      loggedIn: false,
+      subscribedPodcastIds: []
     };
   },
   methods: {
@@ -56,6 +57,15 @@ export default {
         .then(() => {
           this.$router.push("/subscriptions");
         });
+    },
+    getSubscribedPodcastIds() {
+    axios.post("/test-user-subscribed")
+      .then((res) =>{
+        this.subscribedPodcastIds = res.data.podcast_ids;
+      });
+    },
+    disableSubscribeButton(podcastId){
+      return this.subscribedPodcastIds.includes(podcastId);
     },
     getRSS(name, url, isSubscribing){
       var match = url.match(/id(\d+)/)
@@ -131,6 +141,7 @@ export default {
   },
   mounted() {
     this.testUserInSession();
+    this.getSubscribedPodcastIds();
   }
 };
 </script>
