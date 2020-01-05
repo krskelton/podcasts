@@ -98,7 +98,6 @@ export default {
       });
     },
     disableSubscribeButton(podcastId){
-      console.log(podcastId);
       return this.$parent.disableSubscribeButton(podcastId);
     },
     addToHistory() {
