@@ -55,6 +55,9 @@ button.button {
   font-size: 15px;
   display: block;
 }
+button:disabled {
+  background-color: #cccc
+}
 .player {
   max-width: 800px;
   margin: 0 auto;
