@@ -1,10 +1,16 @@
 <template>
-  <div id="app">
+  <div id="app" @click="$refs.modal.style.display='none'">
     <p>Logged in: {{ loggedIn }}</p>
     <router-link to="/register"><button>Register</button></router-link>
     <router-link to="/login"><button>Login</button></router-link>
     <button @click="logout">Log Out</button>
-
+    <div id="myModal" class="modal" ref="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span @click="$refs.modal.style.display='none'" class="close">&times;</span>
+        <p>SUBSCRIBED!!</p>
+      </div>
+    </div>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <router-view></router-view>
     <nav>
