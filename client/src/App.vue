@@ -6,9 +6,12 @@
     <button @click="logout">Log Out</button>
     <div id="myModal" class="modal" ref="modal">
       <!-- Modal content -->
-      <div class="modal-content">
-        <span @click="$refs.modal.style.display='none'" class="close">&times;</span>
-        <p>SUBSCRIBED!!</p>
+      <div class="modal-content" ref="modalcontent">
+        <div class="modal-body">
+          <span @click="$refs.modal.style.display='none'" class="close">&times;</span>
+          <p>You're subscribed to {{ this.podcastName }}</p>
+          <router-link to="/subscriptions"><button class="button">Visit Subscriptions Page</button></router-link>
+        </div>
       </div>
     </div>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
@@ -58,11 +61,19 @@ export default {
   },
   methods: {
     subscribeToPodcast(name, rss_feed_url, podcast_id) {
-      axios
-        .post("/subscription", { name, rss_feed_url, podcast_id })
-        .then(() => {
-          this.$router.push("/subscriptions");
-        });
+      const modal = this.$refs.modal;
+      const modalcontent = this.$refs.modalcontent;
+      let promise = axios.post("/subscription", { name, rss_feed_url, podcast_id })
+      this.getSubscribedPodcastIds();
+      this.podcastName = name;
+      modal.style.display = 'block';
+      setTimeout(function(){
+        modalcontent.classList.add("animate-up");
+        modal.classList.add("fade-out")
+      }, 3000);
+      setTimeout(function(){
+        modal.style.display = 'none';
+      }, 3400)
     },
     getSubscribedPodcastIds() {
     axios.post("/test-user-subscribed")
