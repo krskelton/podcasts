@@ -23,21 +23,31 @@
         </div>
       </div>
     </div>
+    <div class="modal" ref="registerModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="registerModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>Thanks for registering, {{ this.userInSession }}. You're logged in!</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ref="loginModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="loginModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>You're logged in, {{ this.userInSession }}.</p>
+        </div>
+      </div>
+    </div>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <router-view></router-view>
     <nav>
-      <router-link to="/subscriptions"
-        ><img class="icon" src="./assets/images/my-list.png"
-      /></router-link>
-      <router-link to="/searchresults"
-        ><img class="icon" src="./assets/images/search.png"
-      /></router-link>
-      <router-link to="/browse"
-        ><img class="icon" src="./assets/images/browse.png"
-      /></router-link>
-      <router-link to="/history"
-        ><img class="icon" src="./assets/images/my_history.png"
-      /></router-link>
+      <router-link to="/subscriptions"><img class="icon" src="./assets/images/my-list.png"/></router-link>
+      <router-link to="/searchresults"><img class="icon" src="./assets/images/search.png"/></router-link>
+      <router-link to="/browse"><img class="icon" src="./assets/images/browse.png"/></router-link>
+      <router-link to="/history"><img class="icon" src="./assets/images/my_history.png"/></router-link>
     </nav>
   </div>
 </template>
