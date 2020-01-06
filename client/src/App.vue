@@ -1,16 +1,25 @@
 <template>
-  <div id="app" @click="$refs.modal.style.display='none'">
+  <div id="app" @click="$refs.subscriptionModal.style.display='none'">
     <p>Logged in: {{ loggedIn }}</p>
     <router-link to="/register"><button>Register</button></router-link>
     <router-link to="/login"><button>Login</button></router-link>
     <button @click="logout">Log Out</button>
-    <div id="myModal" class="modal" ref="modal">
+    <div class="modal" ref="subscriptionModal">
       <!-- Modal content -->
-      <div class="modal-content" ref="modalcontent">
+      <div class="modal-content" ref="subscriptionModalContent">
         <div class="modal-body">
-          <span @click="$refs.modal.style.display='none'" class="close">&times;</span>
+          <span @click="$refs.subscriptionModal.style.display='none'" class="close">&times;</span>
           <p>You're subscribed to {{ this.podcastName }}</p>
           <router-link to="/subscriptions"><button class="button">Visit Subscriptions Page</button></router-link>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ref="logoutModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="logoutModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>You're logged out!</p>
         </div>
       </div>
     </div>
@@ -61,8 +70,8 @@ export default {
   },
   methods: {
     subscribeToPodcast(name, rss_feed_url, podcast_id) {
-      const modal = this.$refs.modal;
-      const modalcontent = this.$refs.modalcontent;
+      const modal = this.$refs.subscriptionModal;
+      const modalcontent = this.$refs.subscriptionModalContent;
       let promise = axios.post("/subscription", { name, rss_feed_url, podcast_id })
       this.getSubscribedPodcastIds();
       this.podcastName = name;
@@ -111,6 +120,16 @@ export default {
     logout() {
       axios.post("/logout");
       this.loggedIn = false;
+      const modal = this.$refs.logoutModal;
+      const modalcontent = this.$refs.logoutModalContent;
+      modal.style.display = 'block';
+      setTimeout(function(){
+        modalcontent.classList.add("animate-up");
+        modal.classList.add("fade-out")
+      }, 3000);
+      setTimeout(function(){
+        modal.style.display = 'none';
+      }, 3400)
     },
     async testUserInSession() {
       /* hits backend and checks to see if a user is in session - adjusts this.loggedIn accordingly
