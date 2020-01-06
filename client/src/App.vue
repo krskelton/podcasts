@@ -74,17 +74,25 @@ export default {
       episodeTitle: "",
       timeDateAccessed: "",
       podcastId: "",
-      loggedIn: false,
-      subscribedPodcastIds: []
+      loggedIn: '',
+      subscribedPodcastIds: [],
+      userInSession: "",
     };
   },
   methods: {
     subscribeToPodcast(name, rss_feed_url, podcast_id) {
-      const modal = this.$refs.subscriptionModal;
-      const modalcontent = this.$refs.subscriptionModalContent;
-      let promise = axios.post("/subscription", { name, rss_feed_url, podcast_id })
+      axios.post("/subscription", { name, rss_feed_url, podcast_id })
       this.getSubscribedPodcastIds();
       this.podcastName = name;
+      this.openModal(this.$refs.subscriptionModal, this.$refs.subscriptionModalContent);
+    },
+    getSubscribedPodcastIds() {
+    axios.post("/test-user-subscribed")
+      .then((res) =>{
+        this.subscribedPodcastIds = res.data.podcast_ids;
+      });
+    },
+    openModal(modal, modalContent){
       modal.style.display = 'block';
       setTimeout(function(){
         modalcontent.classList.add("animate-up");
@@ -93,12 +101,6 @@ export default {
       setTimeout(function(){
         modal.style.display = 'none';
       }, 3400)
-    },
-    getSubscribedPodcastIds() {
-    axios.post("/test-user-subscribed")
-      .then((res) =>{
-        this.subscribedPodcastIds = res.data.podcast_ids;
-      });
     },
     disableSubscribeButton(podcastId){
       return this.subscribedPodcastIds.includes(podcastId);
@@ -130,18 +132,10 @@ export default {
     logout() {
       axios.post("/logout");
       this.loggedIn = false;
-      const modal = this.$refs.logoutModal;
-      const modalcontent = this.$refs.logoutModalContent;
-      modal.style.display = 'block';
-      setTimeout(function(){
-        modalcontent.classList.add("animate-up");
-        modal.classList.add("fade-out")
-      }, 3000);
-      setTimeout(function(){
-        modal.style.display = 'none';
-      }, 3400)
+      this.openModal(this.$refs.logoutModal, this.$refs.logoutModalContent);
     },
     async testUserInSession() {
+      this.userInSession = this.userInSession;
       /* hits backend and checks to see if a user is in session - adjusts this.loggedIn accordingly
       this ensures that the correct navbar buttons are displayed at all times */
       let promise = axios.post("/users").then(resp => {
