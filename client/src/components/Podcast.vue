@@ -5,7 +5,8 @@
     <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
     <button
       class="button"
-      @click="sendToSubscribe()">
+      @click="sendToSubscribe()"
+      :disabled="disableSubscribeButton(Number(this.$parent.podcastId))">
       Subscribe
     </button>
     <ul v-if="!play">
@@ -95,6 +96,9 @@ export default {
           this.play = false;
         });
       });
+    },
+    disableSubscribeButton(podcastId){
+      return this.$parent.disableSubscribeButton(podcastId);
     },
     addToHistory() {
       let timestamp = Sugar.Date.format(new Date(Date.now()),"%Y-%m-%d %H:%M:%S");

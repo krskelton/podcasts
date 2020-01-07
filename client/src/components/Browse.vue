@@ -50,7 +50,7 @@
         </ul>
         <ol v-if="viewTopList">
             <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="sendFeed(topTenPodcast['im:name'].label, topTenPodcast.link.attributes.href, topTenPodcast)">{{topTenPodcast['im:name'].label}}
-                <button @click="subscribing = true">Subscribe</button>
+                <button @click="subscribing = true" :disabled="disableSubscribeButton(topTenPodcast.id.attributes['im:id'])">Subscribe</button>
             </li>
         </ol>
     </div>
@@ -79,6 +79,9 @@ export default {
                 this.topTenPodcasts = data.data.feed.entry;
                 this.viewTopList = true;
             })
+        },
+        disableSubscribeButton(podcastId){
+            return this.$parent.disableSubscribeButton(Number(podcastId));
         },
         sendFeed(name, url) {
             browseBus.$emit('feedFromBrowse', name, url, this.subscribing);

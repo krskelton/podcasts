@@ -94,6 +94,7 @@ export default {
       this.username = "";
       this.password = "";
       this.confirmPassword = "";
+      this.$parent.openModal(this.$parent.$refs.registerModal, this.$parent.$refs.registerModalContent);
     }
   }
 };
