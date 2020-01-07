@@ -1,26 +1,54 @@
 <template>
-  <div id="app">
+  <div id="app" @click="$refs.subscriptionModal.style.display='none'">
     <p>Logged in: {{ loggedIn }}</p>
     <router-link to="/register"><button>Register</button></router-link>
     <router-link to="/login"><button>Login</button></router-link>
     <button @click="logout">Log Out</button>
-
+    <div class="modal" ref="subscriptionModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="subscriptionModalContent">
+        <div class="modal-body">
+          <span @click="$refs.subscriptionModal.style.display='none'" class="close">&times;</span>
+          <p>You're subscribed to {{ this.podcastName }}</p>
+          <router-link to="/subscriptions"><button class="button">Visit Subscriptions Page</button></router-link>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ref="logoutModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="logoutModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>You're logged out!</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ref="registerModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="registerModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>Thanks for registering, {{ this.userInSession }}. You're logged in!</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ref="loginModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="loginModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>You're logged in, {{ this.userInSession }}.</p>
+        </div>
+      </div>
+    </div>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <router-view></router-view>
     <nav>
-      <router-link to="/subscriptions"
-        ><img class="icon" src="./assets/images/my-list.png"
-      /></router-link>
-      <router-link to="/searchresults"
-        ><img class="icon" src="./assets/images/search.png"
-      /></router-link>
-      <router-link to="/browse"
-        ><img class="icon" src="./assets/images/browse.png"
-      /></router-link>
-      <router-link to="/history"
-        ><img class="icon" src="./assets/images/my_history.png"
-      /></router-link>
-      <router-link to="/playlists"><img class="icon" src="./assets/images/playlist.png" /></router-link>
+      <router-link to="/subscriptions"><img class="icon" src="./assets/images/my-list.png"/></router-link>
+      <router-link to="/searchresults"><img class="icon" src="./assets/images/search.png"/></router-link>
+      <router-link to="/browse"><img class="icon" src="./assets/images/browse.png"/></router-link>
+      <router-link to="/history"><img class="icon" src="./assets/images/my_history.png"/></router-link>
+      <router-link to="/playlists"><img class="icon" src="./assets/images/playlist.png"/></router-link>
     </nav>
   </div>
 </template>
@@ -52,16 +80,36 @@ export default {
       episodeDisplayed: "",
       timeDateAccessed: "",
       podcastId: "",
-      loggedIn: false
+      loggedIn: '',
+      subscribedPodcastIds: [],
+      userInSession: "",
     };
   },
   methods: {
     subscribeToPodcast(name, rss_feed_url, podcast_id) {
-      axios
-        .post("/subscription", { name, rss_feed_url, podcast_id })
-        .then(() => {
-          this.$router.push("/subscriptions");
-        });
+      axios.post("/subscription", { name, rss_feed_url, podcast_id })
+      this.getSubscribedPodcastIds();
+      this.podcastName = name;
+      this.openModal(this.$refs.subscriptionModal, this.$refs.subscriptionModalContent);
+    },
+    getSubscribedPodcastIds() {
+    axios.post("/test-user-subscribed")
+      .then((res) =>{
+        this.subscribedPodcastIds = res.data.podcast_ids;
+      });
+    },
+    openModal(modal, modalContent){
+      modal.style.display = 'block';
+      setTimeout(function(){
+        modalcontent.classList.add("animate-up");
+        modal.classList.add("fade-out")
+      }, 3000);
+      setTimeout(function(){
+        modal.style.display = 'none';
+      }, 3400)
+    },
+    disableSubscribeButton(podcastId){
+      return this.subscribedPodcastIds.includes(podcastId);
     },
     getRSS(name, url, isSubscribing){
       var match = url.match(/id(\d+)/)
@@ -90,8 +138,10 @@ export default {
     logout() {
       axios.post("/logout");
       this.loggedIn = false;
+      this.openModal(this.$refs.logoutModal, this.$refs.logoutModalContent);
     },
     async testUserInSession() {
+      this.userInSession = this.userInSession;
       /* hits backend and checks to see if a user is in session - adjusts this.loggedIn accordingly
       this ensures that the correct navbar buttons are displayed at all times */
       let promise = axios.post("/users").then(resp => {
@@ -138,6 +188,7 @@ export default {
   },
   mounted() {
     this.testUserInSession();
+    this.getSubscribedPodcastIds();
   }
 };
 </script>

@@ -43,10 +43,12 @@ export default {
           this.error = "There's no user with that username. Please try again, or register as a new user."
           return;
         } else {
+          this.$parent.userInSession = this.username;
           // otherwise, change the status of $parent.loggedIn and redirect to homepage
           this.username = '';
           this.password = '';
           this.$parent.loggedIn = true;
+          this.$parent.openModal(this.$parent.$refs.loginModal, this.$parent.$refs.loginModalContent);
         }
       });
     }

@@ -47,3 +47,10 @@ def get_feed():
     rss_feed = request.json["rss_feed"]
     podcast_info = requests.get("https://cors-anywhere.herokuapp.com/" + rss_feed, headers={"X-Requested-With": "XMLHttpRequest"})
     return podcast_info.content
+
+@podcast_api.route('/test-user-subscribed', methods=['POST'])
+def test_user_subscribed():
+    username = session['user']
+    user = db.session.query(Users).filter(Users.username == username).first()
+    user_subscribe_data = db.session.query(Podcast).filter(Podcast.user_id == user.id).all()
+    return jsonify({"podcast_ids": [user.podcast_API_id for user in user_subscribe_data]})
