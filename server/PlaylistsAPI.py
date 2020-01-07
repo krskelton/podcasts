@@ -23,13 +23,8 @@ def add_playlist_item():
     new_playlist_item.episode_summary = request.json['episode_description']
     new_playlist_item.episode_url = request.json['episode_url']
 
-    # new_playlist_item.playlist_id = request.json['playlist_id']
-
-    print("wat *****************")
     db.session.add(new_playlist_item)
-    print("da *****************")
     db.session.commit()
-    print("fug ******************")
     return jsonify(success=True)
 
 @playlists_api.route('/playlists', methods=['GET'])
