@@ -5,9 +5,13 @@
         <input v-model="playlistTitle" @keyup.enter="createPlaylist()" type="text" />
         <button @click="createPlaylist()">Create playlist</button>
         <p>View playlists</p>
-        <!-- <ul>
-            <li v-for="(playlist, index) in playlists" v-bind:key="index">{{playlist.name}}
-        </ul> -->
+        <ul>
+            <li v-for="(playlist, index) in userPlaylists" v-bind:key="index"><h3>{{playlist.title}}{{updateIndex(index)}}</h3>
+            <ul>
+                <li v-for="(playlist_item, index) in userPlaylistItems" v-bind:key="index"><h5>{{playlist_item.playlist_id}} {{playlist_item.episode_title}}</h5></li>
+            </ul>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -23,7 +27,8 @@ export default {
     },
     data() {
         return{
-            playlists: [],
+            userPlaylists: [],
+            userPlaylistItems: [],
             playlistID: null,
             playlistAPIID: null,
             episodeID: null,
@@ -34,7 +39,25 @@ export default {
         createPlaylist() {
             axios.post('/playlists', {title: this.playlistTitle})
             // axios.post('/playlist_items', {playlist_id: this.playlistID, playlistAPI_id: this.playlistAPIID, episode_id: this.episodeID})
+        },
+        updateIndex(index) {
+            this.playlistID = index;
+        },
+        getAndSetUserPlaylists() {
+            axios.get("/playlists")
+            .then((response) => {
+                this.userPlaylists = response.data.playlists;
+                console.log(this.userPlaylists)
+            });
+            axios.get("/playlist_items", {playlist_id: this.playlistID})
+            .then((response) => {
+                this.userPlaylistItems = response.data.playlist_items;
+                console.log(this.userPlaylistItems)
+            });
         }
+    },
+    mounted() {
+        this.getAndSetUserPlaylists();
     }
 }
 </script>

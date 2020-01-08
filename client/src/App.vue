@@ -54,17 +54,17 @@
 </template>
 
 <script>
-import Subscriptions from "./components/Subscriptions.vue";
-import SearchResults from "./components/SearchResults.vue";
-import Browse from "./components/Browse.vue";
-import Podcast from "./components/Podcast.vue";
-import Register from "./components/Register.vue";
-import Login from "./components/Login.vue";
-import History from "./components/History.vue";
-import Playlists from "./components/Playlists.vue";
+// import Subscriptions from "./components/Subscriptions.vue";
+// import SearchResults from "./components/SearchResults.vue";
+// import Browse from "./components/Browse.vue";
+// import Podcast from "./components/Podcast.vue";
+// import Register from "./components/Register.vue";
+// import Login from "./components/Login.vue";
+// import History from "./components/History.vue";
+// import Playlists from "./components/Playlists.vue";
 import axios from "axios";
 
-import { searchBus, browseBus, historyBus, podcastBus, subscriptionBus } from "./main";
+import { searchBus, browseBus, podcastBus, subscriptionBus } from "./main";
 
 export default {
   name: "app",
@@ -101,7 +101,7 @@ export default {
     openModal(modal, modalContent){
       modal.style.display = 'block';
       setTimeout(function(){
-        modalcontent.classList.add("animate-up");
+        modalContent.classList.add("animate-up");
         modal.classList.add("fade-out")
       }, 3000);
       setTimeout(function(){
@@ -176,16 +176,16 @@ export default {
       this.getRSS(name, url, isSubscribing)
     })
   },
-  components: {
-    Subscriptions,
-    Browse,
-    SearchResults,
-    Podcast,
-    History,
-    Register,
-    Playlists,
-    Login
-  },
+  // components: {
+  //   Subscriptions,
+  //   Browse,
+  //   SearchResults,
+  //   Podcast,
+  //   History,
+  //   Register,
+  //   Playlists,
+  //   Login
+  // },
   mounted() {
     this.testUserInSession();
     this.getSubscribedPodcastIds();
