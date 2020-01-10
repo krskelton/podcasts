@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, session
 from sql_alchemy_db_instance import db
-from models import Podcast, Users, PlaylistItems, Playlists, History
+from models import Podcast, Users, History
 import requests
 from sqlalchemy import func
 

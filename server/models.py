@@ -9,7 +9,9 @@ class Users(db.Model):
     username = db.Column(db.String(25), unique=True)
     password = db.Column(db.String(128), nullable=False)
     salt = db.Column(db.String(40), nullable=False)
-    user_history = db.relationship('History', backref='users')
+    user_history = relationship('History', backref='users')
+
+    playlists = relationship('Playlists')
 
 
 class Podcast(db.Model):
@@ -25,12 +27,23 @@ class Playlists(db.Model):
     name = db.Column(db.String(500))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
+    def __init__(self, name, user_id):
+        self.name = name
+        self.user_id = user_id
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    items = relationship("PlaylistItems")
+
 
 class PlaylistItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     playlist_id = db.Column(db.Integer, db.ForeignKey("playlists.id"))
-    podcast_API_id = db.Column(db.Integer)
-    episode_id = db.Column(db.Integer)
+    episode_title = db.Column(db.String)
+    episode_summary = db.Column(db.String)
+    episode_url = db.Column(db.String)
 
 
 class History(db.Model):

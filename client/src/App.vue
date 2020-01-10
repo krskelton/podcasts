@@ -48,30 +48,36 @@
       <router-link to="/searchresults"><img class="icon" src="./assets/images/search.png"/></router-link>
       <router-link to="/browse"><img class="icon" src="./assets/images/browse.png"/></router-link>
       <router-link to="/history"><img class="icon" src="./assets/images/my_history.png"/></router-link>
+      <router-link to="/playlists"><img class="icon" src="./assets/images/playlist.png"/></router-link>
     </nav>
   </div>
 </template>
 
 <script>
-import Subscriptions from "./components/Subscriptions.vue";
-import SearchResults from "./components/SearchResults.vue";
-import Browse from "./components/Browse.vue";
-import Podcast from "./components/Podcast.vue";
-import Register from "./components/Register.vue";
-import Login from "./components/Login.vue";
-import History from "./components/History.vue";
+// import Subscriptions from "./components/Subscriptions.vue";
+// import SearchResults from "./components/SearchResults.vue";
+// import Browse from "./components/Browse.vue";
+// import Podcast from "./components/Podcast.vue";
+// import Register from "./components/Register.vue";
+// import Login from "./components/Login.vue";
+// import History from "./components/History.vue";
+// import Playlists from "./components/Playlists.vue";
 import axios from "axios";
 
-import { searchBus, browseBus, historyBus, podcastBus, subscriptionBus } from "./main";
+import { searchBus, browseBus, podcastBus, subscriptionBus } from "./main";
 
 export default {
   name: "app",
   data() {
     return {
+      episodeList: [],
       podcastName: "",
       podcastFeedURL: "",
       podcastAPIid: "",
       episodeTitle: "",
+      episodeDescription: "",
+      episodeUrl: "",
+      episodeDisplayed: "",
       timeDateAccessed: "",
       podcastId: "",
       loggedIn: '',
@@ -95,7 +101,7 @@ export default {
     openModal(modal, modalContent){
       modal.style.display = 'block';
       setTimeout(function(){
-        modalcontent.classList.add("animate-up");
+        modalContent.classList.add("animate-up");
         modal.classList.add("fade-out")
       }, 3000);
       setTimeout(function(){
@@ -156,7 +162,7 @@ export default {
     podcastBus.$on("feedFromPodcast", () => {
       this.subscribeToPodcast(this.podcastName, this.podcastFeedURL, this.podcastId)
     }),
-    subscriptionBus.$on("feedFromSubscription", (name, url, podcast_id, isUnsubscribing) => {
+    subscriptionBus.$on("feedFromSubscription", (name, url, podcast_id) => {
       this.viewThisPodcast(name, url, podcast_id)
     }),
     searchBus.$on("feedFromSearch", (name, url, podcast_id, isSubscribing) => {
@@ -170,15 +176,16 @@ export default {
       this.getRSS(name, url, isSubscribing)
     })
   },
-  components: {
-    Subscriptions,
-    Browse,
-    SearchResults,
-    Podcast,
-    History,
-    Register,
-    Login
-  },
+  // components: {
+  //   Subscriptions,
+  //   Browse,
+  //   SearchResults,
+  //   Podcast,
+  //   History,
+  //   Register,
+  //   Playlists,
+  //   Login
+  // },
   mounted() {
     this.testUserInSession();
     this.getSubscribedPodcastIds();

@@ -17,7 +17,12 @@
       >
         <div>
           <h3>{{ episode.title }}</h3>
-          <p>{{ episode.description }}</p>
+            <select @change="dontPlay($event)" :value="null">
+              <option v-for="playlist in userPlaylists" :value="playlist.id" :key="playlist.id">
+                {{ playlist.title }}
+              </option>
+            </select>
+          <button @click="getEpisode(episode) + addToPlaylist()">Add to playlist</button>
         </div>
       </li>
     </ul>
@@ -26,6 +31,7 @@
       <p>
         <strong>{{ episodeTitle }}</strong>
       </p>
+      <div v-html="episodeDescription"></div>
       <audio controls id="podcast-audio" @play="testDuplicateHistoryEntry()" @pause="registerPause()">
         <source :src="musicFile" type="audio/mpeg" />
       </audio>
@@ -53,14 +59,36 @@ export default {
       parentPodcastArtUrl: "",
       play: false,
       episodeTitle: "",
+      episodeDescription: "",
+      episodeUrl: "",
       musicFile: "",
       timeDateAccessed: "",
       trackPlaying: false,
-      d: ""
+      userPlaylists: [],
+      addingToPlaylist: false,
+      event: []
     };
   },
   methods: {
-    testDuplicateHistoryEntry() {
+    dontPlay(event) {
+      this.addingToPlaylist = true;
+      this.event = event;
+    },
+    getAndSetUserPlaylists() {
+      axios.get("/playlists")
+      .then((response) => {
+        this.userPlaylists = response.data.playlists;
+      })
+    },
+    addToPlaylist() {
+      this.addingToPlaylist = true;
+      let playlistID = this.event.target.value;
+      axios.post("/playlist_items", { playlist_id: playlistID, episode_title: this.episodeTitle, episode_description: this.episodeDescription, episode_url: this.episodeUrl })
+      .then(() => {
+        // this.$router.push("/playlists");
+      })
+    },
+    testDuplicateHiPhillipsstoryEntry() {
       // before adding a new user to DB, make sure that username isn't already taken
       axios.post("/duplicate-history-entry-test", { episode_title: this.episodeTitle })
         .then(resp => {
@@ -79,7 +107,7 @@ export default {
     sendToSubscribe() {
       podcastBus.$emit('feedFromPodcast');
     },
-    getParentPodcastData(episode){
+    getParentPodcastData(){
       let lookup_parent_podcast_url = "https://itunes.apple.com/lookup?id=" + this.$parent.podcastId + '&entity=podcast'
       axios.get("https://cors-anywhere.herokuapp.com/" + lookup_parent_podcast_url)
       .then((data) => {
@@ -109,10 +137,20 @@ export default {
     searchFeedRecieved(feedurl, podcastname) {
       this.podcastName = podcastname;
     },
+    getEpisode(episode) {
+      this.episodeTitle = episode.title;
+      this.episodeDescription = episode.content;
+      this.episodeUrl = episode.enclosure.url;
+    },
     // playEpisode sets the variable in data() equal to the podcast title and the mp3 url and sets play equal to true so the player will element will show.
     playEpisode(episode) {
+      if (this.addingToPlaylist === true) {
+        this.addingToPlaylist = false;
+        return
+      }
       this.episodeDisplayed = episode;
       this.episodeTitle = episode.title;
+      this.episodeDescription = episode.content;
       this.musicFile = episode.enclosure.url;
       this.play = true;
     },
@@ -139,6 +177,7 @@ export default {
   //getRSSFeed is mounted so it will load when the Podcast component becomes visible
   mounted() {
     this.getRSSFeed(this.$parent.podcastFeedURL);
+    this.getAndSetUserPlaylists();
   }
 };
 </script>
