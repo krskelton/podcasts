@@ -12,8 +12,8 @@
             <hr>
             <div v-for="(playlist_item, index) in userPlaylistItems" v-bind:key="index">
                 <h5 v-if="playlist_item.playlist_id === playlist.id">
-                    {{playlist_item.episode_title}}
-                    <button class="button" style="margin: 20px auto;" @click="removeEpisode()">
+                    {{playlist_item.playlist_id}} {{playlist_item.episode_title}}
+                    <button class="button" style="margin: 20px auto;" @click="removePlaylistItem(playlist_item.id)">
                         Remove episode
                     </button>
                     <hr>
@@ -66,8 +66,11 @@ export default {
             });
             
         },
-        removeEpisode() {
-            console.log("test")
+        removePlaylistItem(playlist_item_id) {
+            console.log("playlist_item_id ", playlist_item_id)
+            axios
+            .patch("/playlist_items", { playlist_item_id: playlist_item_id })
+            .then(() => this.getAndSetUserPlaylists());
         }
     },
     mounted() {
