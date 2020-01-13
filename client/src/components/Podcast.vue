@@ -87,6 +87,7 @@ export default {
       .then(() => {
         // this.$router.push("/playlists");
       })
+      this.$parent.openModal(this.$parent.$refs.addPlaylistItemModal, this.$parent.$refs.addPlaylistItemModalContent);
     },
     testDuplicateHistoryEntry() {
       // before adding a new user to DB, make sure that username isn't already taken

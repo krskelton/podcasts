@@ -41,6 +41,43 @@
         </div>
       </div>
     </div>
+    <div class="modal" ref="createPlaylistModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="createPlaylistModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>Playlist created.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ref="addPlaylistItemModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="addPlaylistItemModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>Episode added to playlist.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ref="deletePlaylistModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="deletePlaylistModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>Playlist deleted.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal" ref="removePlaylistItemModal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="removePlaylistItemModalContent">
+        <div class="modal-body">
+          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <p>Playlist episode removed.</p>
+        </div>
+      </div>
+    </div>
+
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <router-view></router-view>
     <nav>

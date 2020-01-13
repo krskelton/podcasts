@@ -52,6 +52,7 @@ export default {
         createPlaylist() {
             axios.post('/playlists', { title: this.playlistTitle })
             .then(() => this.getAndSetUserPlaylists());
+            this.$parent.openModal(this.$parent.$refs.createPlaylistModal, this.$parent.$refs.createPlaylistModalContent);
         },
         updateIndex(index) {
             this.playlistID = index;
@@ -69,7 +70,9 @@ export default {
         },
         removePlaylistItem(playlist_item_id) {
             axios.patch("/playlist_items", { playlist_item_id: playlist_item_id })
-            .then(() => this.getAndSetUserPlaylists());
+            .then(() =>
+            this.getAndSetUserPlaylists())
+            this.$parent.openModal(this.$parent.$refs.removePlaylistItemModal, this.$parent.$refs.removePlaylistItemModalContent)
         },
         deletePlaylist(playlist_id) {
             for (let i = 0; i < this.userPlaylistItems.length; i++) {
@@ -78,7 +81,10 @@ export default {
                 }
             }
             axios.patch("/playlists", { playlist_id: playlist_id })
-            .then(() => this.getAndSetUserPlaylists());
+            .then(() =>
+            this.getAndSetUserPlaylists(),
+            this.$parent.openModal(this.$parent.$refs.deletePlaylistModal, this.$parent.$refs.deletePlaylistModalContent)
+            );
         }
     },
     mounted() {
