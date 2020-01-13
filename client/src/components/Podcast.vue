@@ -88,7 +88,7 @@ export default {
         // this.$router.push("/playlists");
       })
     },
-    testDuplicateHiPhillipsstoryEntry() {
+    testDuplicateHistoryEntry() {
       // before adding a new user to DB, make sure that username isn't already taken
       axios.post("/duplicate-history-entry-test", { episode_title: this.episodeTitle })
         .then(resp => {

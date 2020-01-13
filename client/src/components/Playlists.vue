@@ -5,12 +5,21 @@
         <input v-model="playlistTitle" @keyup.enter="createPlaylist()" type="text" />
         <button @click="createPlaylist()">Create playlist</button>
         <p>View playlists</p>
+        <hr>
         <ul>
-            <li v-for="(playlist, index) in userPlaylists" v-bind:key="index"><h3>{{playlist.title}}{{updateIndex(index)}}</h3>
-            <ul>
-                <li v-for="(playlist_item, index) in userPlaylistItems" v-bind:key="index"><h5>{{playlist_item.playlist_id}} {{playlist_item.episode_title}}</h5></li>
-            </ul>
-            </li>
+            <div v-for="(playlist, index) in userPlaylists" v-bind:key="index">
+            <h2>{{playlist.title}}{{updateIndex(index)}}</h2>
+            <hr>
+            <div v-for="(playlist_item, index) in userPlaylistItems" v-bind:key="index">
+                <h5 v-if="playlist_item.playlist_id === playlist.id">
+                    {{playlist_item.episode_title}}
+                    <button class="button" style="margin: 20px auto;" @click="removeEpisode()">
+                        Remove episode
+                    </button>
+                    <hr>
+                </h5>
+            </div>
+            </div>
         </ul>
     </div>
 </template>
@@ -32,12 +41,13 @@ export default {
             playlistID: null,
             playlistAPIID: null,
             episodeID: null,
-            playlistTitle: ""
+            playlistTitle: "",
+            playlistIDList: []
         }
     },
     methods: {
         createPlaylist() {
-            axios.post('/playlists', {title: this.playlistTitle})
+            axios.post('/playlists', { title: this.playlistTitle })
             // axios.post('/playlist_items', {playlist_id: this.playlistID, playlistAPI_id: this.playlistAPIID, episode_id: this.episodeID})
         },
         updateIndex(index) {
@@ -47,13 +57,17 @@ export default {
             axios.get("/playlists")
             .then((response) => {
                 this.userPlaylists = response.data.playlists;
-                console.log(this.userPlaylists)
+                console.log("userPlaylists ", this.userPlaylists)
+                axios.get("/playlist_items")
+                .then((response) => {
+                    this.userPlaylistItems = response.data.playlist_items;
+                    console.log("userPlaylistItems ", this.userPlaylistItems)
+                });
             });
-            axios.get("/playlist_items", {playlist_id: this.playlistID})
-            .then((response) => {
-                this.userPlaylistItems = response.data.playlist_items;
-                console.log(this.userPlaylistItems)
-            });
+            
+        },
+        removeEpisode() {
+            console.log("test")
         }
     },
     mounted() {
