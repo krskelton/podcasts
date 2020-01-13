@@ -9,6 +9,9 @@
         <ul>
             <div v-for="(playlist, index) in userPlaylists" v-bind:key="index">
             <h2>{{playlist.title}}{{updateIndex(index)}}</h2>
+            <button class="button" style="margin: 20px auto;" @click="deletePlaylist(playlist.id)">
+                Delete playlist
+            </button>
             <hr>
             <div v-for="(playlist_item, index) in userPlaylistItems" v-bind:key="index">
                 <h5 v-if="playlist_item.playlist_id === playlist.id">
@@ -48,7 +51,7 @@ export default {
     methods: {
         createPlaylist() {
             axios.post('/playlists', { title: this.playlistTitle })
-            // axios.post('/playlist_items', {playlist_id: this.playlistID, playlistAPI_id: this.playlistAPIID, episode_id: this.episodeID})
+            .then(() => this.getAndSetUserPlaylists());
         },
         updateIndex(index) {
             this.playlistID = index;
@@ -57,19 +60,24 @@ export default {
             axios.get("/playlists")
             .then((response) => {
                 this.userPlaylists = response.data.playlists;
-                console.log("userPlaylists ", this.userPlaylists)
                 axios.get("/playlist_items")
                 .then((response) => {
                     this.userPlaylistItems = response.data.playlist_items;
-                    console.log("userPlaylistItems ", this.userPlaylistItems)
                 });
             });
             
         },
         removePlaylistItem(playlist_item_id) {
-            console.log("playlist_item_id ", playlist_item_id)
-            axios
-            .patch("/playlist_items", { playlist_item_id: playlist_item_id })
+            axios.patch("/playlist_items", { playlist_item_id: playlist_item_id })
+            .then(() => this.getAndSetUserPlaylists());
+        },
+        deletePlaylist(playlist_id) {
+            for (let i = 0; i < this.userPlaylistItems.length; i++) {
+                if (this.userPlaylistItems[i].playlist_id === playlist_id) {
+                    this.removePlaylistItem(this.userPlaylistItems[i].id);
+                }
+            }
+            axios.patch("/playlists", { playlist_id: playlist_id })
             .then(() => this.getAndSetUserPlaylists());
         }
     },
