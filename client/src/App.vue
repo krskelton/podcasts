@@ -1,8 +1,12 @@
 <template>
   <div id="app" @click="$refs.subscriptionModal.style.display='none'">
     <p>Logged in: {{ loggedIn }}</p>
-    <router-link to="/register"><button>Register</button></router-link>
-    <router-link to="/login"><button>Login</button></router-link>
+    <router-link to="/register">
+      <button>Register</button>
+    </router-link>
+    <router-link to="/login">
+      <button>Login</button>
+    </router-link>
     <button @click="logout">Log Out</button>
     <div class="modal" ref="subscriptionModal">
       <!-- Modal content -->
@@ -10,7 +14,9 @@
         <div class="modal-body">
           <span @click="$refs.subscriptionModal.style.display='none'" class="close">&times;</span>
           <p>You're subscribed to {{ this.podcastName }}</p>
-          <router-link to="/subscriptions"><button class="button">Visit Subscriptions Page</button></router-link>
+          <router-link to="/subscriptions">
+            <button class="button">Visit Subscriptions Page</button>
+          </router-link>
         </div>
       </div>
     </div>
@@ -44,24 +50,48 @@
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <router-view></router-view>
     <nav>
-      <router-link to="/subscriptions"><img class="icon" src="./assets/images/my-list.png"/></router-link>
-      <router-link to="/searchresults"><img class="icon" src="./assets/images/search.png"/></router-link>
-      <router-link to="/browse"><img class="icon" src="./assets/images/browse.png"/></router-link>
-      <router-link to="/history"><img class="icon" src="./assets/images/my_history.png"/></router-link>
-      <router-link to="/playlists"><img class="icon" src="./assets/images/playlist.png"/></router-link>
+      <router-link to="/subscriptions" class="nav-item">
+        <img
+          class="icon"
+          :class="[currentPage.includes('subscriptions') ? activeClass : '', 'nav-item']"
+          src="./assets/images/my-list.png"
+        />
+      </router-link>
+
+      <router-link to="/searchresults" class="nav-item">
+        <img
+          class="icon"
+          :class="[currentPage.includes('searchresults') ? activeClass : '', 'nav-item']"
+          src="./assets/images/search.png"
+        />
+      </router-link>
+
+      <router-link to="/browse">
+        <img
+          class="icon"
+          :class="[currentPage.includes('browse') ? activeClass : '', 'nav-item']"
+          src="./assets/images/browse.png"
+        />
+      </router-link>
+      <router-link to="/history">
+        <img
+          class="icon"
+          :class="[currentPage.includes('history') ? activeClass : '', 'nav-item']"
+          src="./assets/images/my_history_gray.png"
+        />
+      </router-link>
+      <router-link to="/playlists">
+        <img
+          class="icon"
+          :class="[currentPage.includes('playlists') ? activeClass : '', 'nav-item']"
+          src="./assets/images/playlist.png"
+        />
+      </router-link>
     </nav>
   </div>
 </template>
 
 <script>
-// import Subscriptions from "./components/Subscriptions.vue";
-// import SearchResults from "./components/SearchResults.vue";
-// import Browse from "./components/Browse.vue";
-// import Podcast from "./components/Podcast.vue";
-// import Register from "./components/Register.vue";
-// import Login from "./components/Login.vue";
-// import History from "./components/History.vue";
-// import Playlists from "./components/Playlists.vue";
 import axios from "axios";
 
 import { searchBus, browseBus, podcastBus, subscriptionBus } from "./main";
@@ -80,54 +110,71 @@ export default {
       episodeDisplayed: "",
       timeDateAccessed: "",
       podcastId: "",
-      loggedIn: '',
+      loggedIn: "",
       subscribedPodcastIds: [],
       userInSession: "",
+      activeClass: "active"
     };
   },
   methods: {
     subscribeToPodcast(name, rss_feed_url, podcast_id) {
-      axios.post("/subscription", { name, rss_feed_url, podcast_id })
+      axios.post("/subscription", { name, rss_feed_url, podcast_id });
       this.getSubscribedPodcastIds();
       this.podcastName = name;
-      this.openModal(this.$refs.subscriptionModal, this.$refs.subscriptionModalContent);
+      this.openModal(
+        this.$refs.subscriptionModal,
+        this.$refs.subscriptionModalContent
+      );
     },
     getSubscribedPodcastIds() {
-    axios.post("/test-user-subscribed")
-      .then((res) =>{
+      axios.post("/test-user-subscribed").then(res => {
         this.subscribedPodcastIds = res.data.podcast_ids;
       });
     },
-    openModal(modal, modalContent){
-      modal.style.display = 'block';
-      setTimeout(function(){
+    openModal(modal, modalContent) {
+      modal.style.display = "block";
+      setTimeout(function() {
         modalContent.classList.add("animate-up");
-        modal.classList.add("fade-out")
+        modal.classList.add("fade-out");
       }, 3000);
-      setTimeout(function(){
-        modal.style.display = 'none';
-      }, 3400)
+      setTimeout(function() {
+        modal.style.display = "none";
+      }, 3400);
     },
-    disableSubscribeButton(podcastId){
+    disableSubscribeButton(podcastId) {
       return this.subscribedPodcastIds.includes(podcastId);
     },
-    getRSS(name, url, isSubscribing){
-      var match = url.match(/id(\d+)/)
+    getRSS(name, url, isSubscribing) {
+      var match = url.match(/id(\d+)/);
       if (match) var podID = match[1];
       else podID = url.match(/\d+/);
 
-      axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
-      .then((data) => {
+      axios
+        .get(
+          "https://jsonp.afeld.me/?url=" +
+            "https://itunes.apple.com/lookup?id=" +
+            podID +
+            "&entity=podcast"
+        )
+        .then(data => {
           this.podcastFeedUrl = data.data.results[0].feedUrl;
           this.podcastId = podID;
-          this.podcastName = name
-          this.podcastFeedURL = this.podcastFeedUrl
+          this.podcastName = name;
+          this.podcastFeedURL = this.podcastFeedUrl;
           // browseBus.$emit('feedFromBrowse', name, this.podcastFeedUrl, podID, this.subscribing);
           if (isSubscribing === true) {
-            this.subscribeToPodcast(this.podcastName, this.podcastFeedURL, this.podcastId);
+            this.subscribeToPodcast(
+              this.podcastName,
+              this.podcastFeedURL,
+              this.podcastId
+            );
           }
-          this.viewThisPodcast(this.podcastName, this.podcastFeedURL, this.podcastId);
-      })
+          this.viewThisPodcast(
+            this.podcastName,
+            this.podcastFeedURL,
+            this.podcastId
+          );
+        });
     },
     viewThisPodcast(name, url, id) {
       this.podcastName = name;
@@ -160,32 +207,34 @@ export default {
   },
   created() {
     podcastBus.$on("feedFromPodcast", () => {
-      this.subscribeToPodcast(this.podcastName, this.podcastFeedURL, this.podcastId)
+      this.subscribeToPodcast(
+        this.podcastName,
+        this.podcastFeedURL,
+        this.podcastId
+      );
     }),
-    subscriptionBus.$on("feedFromSubscription", (name, url, podcast_id) => {
-      this.viewThisPodcast(name, url, podcast_id)
-    }),
-    searchBus.$on("feedFromSearch", (name, url, podcast_id, isSubscribing) => {
-      if (isSubscribing === true) {
-        this.subscribeToPodcast(name, url, podcast_id);
-        return;
-      }
-      this.viewThisPodcast(name, url, podcast_id);
-    }),
-    browseBus.$on("feedFromBrowse", (name, url, isSubscribing) => {
-      this.getRSS(name, url, isSubscribing)
-    })
+      subscriptionBus.$on("feedFromSubscription", (name, url, podcast_id) => {
+        this.viewThisPodcast(name, url, podcast_id);
+      }),
+      searchBus.$on(
+        "feedFromSearch",
+        (name, url, podcast_id, isSubscribing) => {
+          if (isSubscribing === true) {
+            this.subscribeToPodcast(name, url, podcast_id);
+            return;
+          }
+          this.viewThisPodcast(name, url, podcast_id);
+        }
+      ),
+      browseBus.$on("feedFromBrowse", (name, url, isSubscribing) => {
+        this.getRSS(name, url, isSubscribing);
+      });
   },
-  // components: {
-  //   Subscriptions,
-  //   Browse,
-  //   SearchResults,
-  //   Podcast,
-  //   History,
-  //   Register,
-  //   Playlists,
-  //   Login
-  // },
+  computed: {
+    currentPage() {
+      return this.$route.path;
+    }
+  },
   mounted() {
     this.testUserInSession();
     this.getSubscribedPodcastIds();

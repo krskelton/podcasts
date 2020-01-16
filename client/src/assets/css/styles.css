@@ -16,13 +16,22 @@ img.logo {
 }
 nav {
   position: fixed;
+  text-align: center;
   bottom: 0;
   width: 100%;
   background: #ccc;
   margin: 0;
 }
+nav .active,
+.active {
+  opacity: 1;
+  visibility: visible;
+  background-color: black;
+}
 nav button {
   width: 25%;
+  position: center;
+  color: gray;
 }
 img.icon {
   width: 75px;
@@ -57,7 +66,7 @@ button.button {
   display: block;
 }
 button:disabled {
-  background-color: #cccc
+  background-color: #cccc;
 }
 button.button:hover {
   cursor: pointer;
@@ -91,10 +100,10 @@ button.button:hover {
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%; 
+  height: 100%;
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
@@ -105,12 +114,12 @@ button.button:hover {
   align-items: center;
   background-color: #fefefe;
   margin: auto;
-  padding: 2px 16px;  
+  padding: 2px 16px;
   border: 1px solid #888;
   width: 20%;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   animation-name: animatedown;
-  animation-duration: 0.5s
+  animation-duration: 0.5s;
 }
 
 /* The Close Button */
@@ -139,16 +148,32 @@ button.button:hover {
 }
 
 @keyframes animatedown {
-  from {top: -300px; opacity: 0}
-  to {top: 0; opacity: 1}
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
 }
 
 @keyframes animateup {
-  from {top: 0; opacity: 1}
-  to {top: -300px; opacity: 0}
+  from {
+    top: 0;
+    opacity: 1;
+  }
+  to {
+    top: -300px;
+    opacity: 0;
+  }
 }
 
 @keyframes fadeout {
-  from {opacity: 1}
-  to {opacity: 0}
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
