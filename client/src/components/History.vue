@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <div class="page-wrapper">
     <h2>My Listening History</h2>
-    <ul>
-      <li v-for="item in myHistory">
-        <img id="Column1-art-name" :src="item.parent_podcast_art_url" />
-        <span>{{ item.episode_title }}</span>
+    <ul class="history-list">
+      <li class="Col1" v-for="item in myHistory" :key="item">
+        <img class="Col1-img" :src="item.parent_podcast_art_url" />
+        <span class="col1-title">{{ item.episode_title }}</span>
 
         <!-- would like to format the viewing of time stamp to be cleaner (take off GMT)  -->
-        <audio controls id="Column2-audio-timestamp" :currentTime.prop="item.current_time_listened">
+        <audio controls class="Col2" :currentTime.prop="item.current_time_listened">
           <source :src="item.episode_url" type="audio/mpeg" />
         </audio>
-        <span>{{ item.time_stamp_accessed}}</span>
+        <span class="col2-timestamp">{{ item.time_stamp_accessed}}</span>
         <!-- need to make 2 columns to stack the data in mobile view -->
       </li>
     </ul>
@@ -41,4 +41,22 @@ export default {
 </script>
 
 <style>
+.page-wrapper {
+  margin: 15px;
+}
+ul.history-list {
+  flex-direction: column;
+  display: flex;
+  width: 100%;
+}
+li.Col1 {
+  display: flex;
+  flex-wrap: wrap;
+}
+audio.Col2 {
+  display: flex;
+}
+span.col2-timestamp {
+  display: flex;
+}
 </style>

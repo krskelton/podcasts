@@ -49,7 +49,7 @@
     </div>
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <router-view></router-view>
-    <nav>
+    <nav class="nav-bar">
       <router-link to="/subscriptions" class="nav-item">
         <img
           class="icon"
