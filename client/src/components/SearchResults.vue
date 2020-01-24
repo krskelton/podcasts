@@ -8,7 +8,6 @@
         <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
             <li @click="sendFeedtoApp(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">{{searchResult.collectionName}}
                 <button @click="sendToSubscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)" :disabled="disableSubscribeButton(searchResult.collectionId)">Subscribe</button>
-                <button @click="sendToPlaylist(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">Add to playlist</button>
             </li>
         </ul>
     </div>
