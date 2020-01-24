@@ -1,6 +1,6 @@
 body {
   font-family: "Raleway", sans-serif;
-  margin: 0;
+  margin-left: 5px;
 }
 h1 {
   text-align: center;
@@ -14,7 +14,7 @@ img.logo {
   width: 250px;
   max-width: 100%;
 }
-nav {
+nav#nav-bar {
   display: flex;
   justify-content: space-evenly;
   position: fixed;
@@ -22,7 +22,7 @@ nav {
   bottom: 0;
   width: 100%;
   background: #ccc;
-  margin: 10 px;
+  margin: -5 px;
 }
 nav .active,
 .active {
@@ -66,6 +66,13 @@ button {
   color: #fff;
   font-size: 15px;
   display: block;
+}
+button.Register,
+button.login,
+button.logout,
+button.playlist {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 button:disabled {
   background-color: #cccc;

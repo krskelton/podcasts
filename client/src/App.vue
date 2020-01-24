@@ -2,12 +2,12 @@
   <div id="app" @click="$refs.subscriptionModal.style.display='none'">
     <p>Logged in: {{ loggedIn }}</p>
     <router-link to="/register">
-      <button>Register</button>
+      <button class="Register">Register</button>
     </router-link>
     <router-link to="/login">
-      <button>Login</button>
+      <button class="login">Login</button>
     </router-link>
-    <button @click="logout">Log Out</button>
+    <button class="logout" @click="logout">Log Out</button>
     <div class="modal" ref="subscriptionModal">
       <!-- Modal content -->
       <div class="modal-content" ref="subscriptionModalContent">
@@ -86,7 +86,7 @@
 
     <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
     <router-view></router-view>
-    <nav class="nav-bar">
+    <nav id="nav-bar">
       <router-link to="/subscriptions" class="nav-item">
         <img
           class="icon"
