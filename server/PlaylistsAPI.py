@@ -39,5 +39,18 @@ def get_playlist_items():
 
     return jsonify({"playlist_items": [{ "id": playlist_item.id, "playlist_id": playlist_item.playlist_id, "episode_title": playlist_item.episode_title, "episode_summary": playlist_item.episode_summary, "episode_url": playlist_item.episode_url } for playlist_item in playlist_items]})
 
-    # playlist_id = db.session.query(Playlists).filter(Playlists.id)
-    # playlist_episodes = db.session.query(PlaylistItems).filter(PlaylistItems.playlist_id == playlist_id)
+@playlists_api.route('/playlists', methods=['PATCH'])
+def delete_playlist():
+    playlist_id = request.json["playlist_id"]
+    target_playlist = db.session.query(Playlists).filter_by(id = playlist_id).first()
+    db.session.delete(target_playlist)
+    db.session.commit()
+    return jsonify(success=True)
+
+@playlists_api.route('/playlist_items', methods=['PATCH'])
+def remove_playlist_item():
+    playlist_item_id = request.json["playlist_item_id"]
+    target_playlist_item = db.session.query(PlaylistItems).filter_by(id = playlist_item_id).first()
+    db.session.delete(target_playlist_item)
+    db.session.commit()
+    return jsonify(success=True)
