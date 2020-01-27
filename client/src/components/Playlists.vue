@@ -10,7 +10,6 @@
       <div v-for="(playlist, index) in userPlaylists" v-bind:key="index">
         <h2>{{playlist.title}}{{updateIndex(index)}}</h2>
         <button class="playlist" @click="deletePlaylist(playlist.id)">Delete playlist</button>
-        <hr />
         <div v-for="(playlist_item, index) in userPlaylistItems" v-bind:key="index">
           <h5 v-if="playlist_item.playlist_id === playlist.id">
             {{playlist_item.playlist_id}} {{playlist_item.episode_title}}
