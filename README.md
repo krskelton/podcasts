@@ -45,6 +45,7 @@ Navigate into the Client folder and install npm.
 `npm install`
 `npm install sugar`
 `npm install vue-router`
+(Sugarjs library used for formatting dates for DB)
 
 Navigate into the Server folder and install pipenv.
 
@@ -81,18 +82,8 @@ RUN_ENVIRONMENT=‘insert your data'
     - `npm run build`
   - In the other tab, navigate into the Server folder and enter:
     - `pipenv run python main.py`
-- Navigate to https://localhost:5000/ on your browser
+- Navigate to https://localhost:5000/ (or other specified url) on your browser
 
 ## Caveats and Good-To-Knows
 
-- The call to the iTunes API can be slow at times, especially for the Browse functionality.
-
-## Next Steps
-
-### Planned Features:
-
-- User accounts
-- Subscription thank you message
-- Disabled subscription button when a user is already subscribed
-- Count of episodes the user has listened to in subscription list
-- Add play icon at the bottom with
+- The call to the iTunes API can be slow at times.
