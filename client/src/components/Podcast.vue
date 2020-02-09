@@ -14,11 +14,12 @@
           </div>
           <div id="add-to-playlist">
             <select @change="dontPlay($event)" :value="null">
-              <option value="none" selected disabled>Add Episode to Playlist</option>
+              <option value="" selected disabled hidden>Add Episode to Playlist</option>
               <option v-for="playlist in userPlaylists" :value="playlist.id" :key="playlist.id">
                 {{ playlist.title }}
               </option>
             </select>
+            <br>
           <button @click="getEpisode(episode) + addToPlaylist()">Add to playlist</button>
         </div>
       </li>
