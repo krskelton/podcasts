@@ -23,6 +23,7 @@ Vue.config.productionTip = false;
 
 const router = new VueRouter({
   routes: [
+    { path: "/", component: Browse },
     { path: "/browse", component: Browse },
     { path: "/subscriptions", component: Subscriptions },
     { path: "/searchresults", component: SearchResults },
