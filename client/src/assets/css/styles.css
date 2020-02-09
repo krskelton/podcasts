@@ -19,6 +19,24 @@ img.logo {
   width: 250px;
   max-width: 100%;
 }
+#episode-title-container {
+  display: flex;
+  flex-direction: row;
+}
+#episode-title {
+  width: 75%;
+  border-right: 1px solid black;
+}
+#add-to-playlist {
+  width: 25%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-item-align: center;
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+}
 nav#nav-bar {
   display: flex;
   justify-content: space-evenly;
