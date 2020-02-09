@@ -1,13 +1,14 @@
 <template>
   <div id="app" @click="$refs.subscriptionModal.style.display='none'">
-    <p>Logged in: {{ loggedIn }}</p>
-    <router-link to="/register">
-      <button class="Register">Register</button>
-    </router-link>
-    <router-link to="/login">
-      <button class="login">Login</button>
-    </router-link>
-    <button class="logout" @click="logout">Log Out</button>
+    <nav id="login-register-logout">
+      <router-link to="/register">
+        <button class="Register">Register</button>
+      </router-link>
+      <router-link to="/login">
+        <button class="login">Login</button>
+      </router-link>
+      <button class="logout" @click="logout">Log Out</button>
+    </nav>
     <div class="modal" ref="subscriptionModal">
       <!-- Modal content -->
       <div class="modal-content" ref="subscriptionModalContent">
