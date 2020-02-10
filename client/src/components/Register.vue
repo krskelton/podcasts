@@ -94,7 +94,9 @@ export default {
       this.username = "";
       this.password = "";
       this.confirmPassword = "";
-      this.$parent.openModal(this.$parent.$refs.registerModal, this.$parent.$refs.registerModalContent);
+      this.$parent.modalText = "Thank you for registering, " + this.$parent.userInSession;
+      this.$parent.openModal();
+      this.$router.push('/browse');
     }
   }
 };

@@ -48,7 +48,9 @@ export default {
           this.username = '';
           this.password = '';
           this.$parent.loggedIn = true;
-          this.$parent.openModal(this.$parent.$refs.loginModal, this.$parent.$refs.loginModalContent);
+          this.$parent.modalText = "Welcome back, " + this.$parent.userInSession;
+          this.$parent.openModal();
+          this.$router.push('/subscriptions');
         }
       });
     }

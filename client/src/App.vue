@@ -11,78 +11,12 @@
         <button class="logout" @click="logout">Log Out</button>
       </span>
     </nav>
-    <div class="modal" ref="subscriptionModal">
+    <div class="modal" ref="modal">
       <!-- Modal content -->
-      <div class="modal-content" ref="subscriptionModalContent">
+      <div class="modal-content" ref="modalContent">
         <div class="modal-body">
-          <span @click="$refs.subscriptionModal.style.display='none'" class="close">&times;</span>
-          <p>You're subscribed to {{ this.podcastName }}</p>
-          <router-link to="/subscriptions">
-            <button class="button">Visit Subscriptions Page</button>
-          </router-link>
-        </div>
-      </div>
-    </div>
-    <div class="modal" ref="logoutModal">
-      <!-- Modal content -->
-      <div class="modal-content" ref="logoutModalContent">
-        <div class="modal-body">
-          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
-          <p>You're logged out!</p>
-        </div>
-      </div>
-    </div>
-    <div class="modal" ref="registerModal">
-      <!-- Modal content -->
-      <div class="modal-content" ref="registerModalContent">
-        <div class="modal-body">
-          <span @click="$refs.registerModal.style.display='none'" class="close">&times;</span>
-          <p>Thanks for registering, {{ this.userInSession }}. You're logged in!</p>
-        </div>
-      </div>
-    </div>
-    <div class="modal" ref="loginModal">
-      <!-- Modal content -->
-      <div class="modal-content" ref="loginModalContent">
-        <div class="modal-body">
-          <span @click="$refs.loginModal.style.display='none'" class="close">&times;</span>
-          <p>You're logged in, {{ this.userInSession }}.</p>
-        </div>
-      </div>
-    </div>
-    <div class="modal" ref="createPlaylistModal">
-      <!-- Modal content -->
-      <div class="modal-content" ref="createPlaylistModalContent">
-        <div class="modal-body">
-          <span @click="$refs.createPlaylistModal.style.display='none'" class="close">&times;</span>
-          <p>Playlist created.</p>
-        </div>
-      </div>
-    </div>
-    <div class="modal" ref="addPlaylistItemModal">
-      <!-- Modal content -->
-      <div class="modal-content" ref="addPlaylistItemModalContent">
-        <div class="modal-body">
-          <span @click="$refs.addPlaylistItemModal.style.display='none'" class="close">&times;</span>
-          <p>Episode added to playlist.</p>
-        </div>
-      </div>
-    </div>
-    <div class="modal" ref="deletePlaylistModal">
-      <!-- Modal content -->
-      <div class="modal-content" ref="deletePlaylistModalContent">
-        <div class="modal-body">
-          <span @click="$refs.deletePlaylistModal.style.display='none'" class="close">&times;</span>
-          <p>Playlist deleted.</p>
-        </div>
-      </div>
-    </div>
-    <div class="modal" ref="removePlaylistItemModal">
-      <!-- Modal content -->
-      <div class="modal-content" ref="removePlaylistItemModalContent">
-        <div class="modal-body">
-          <span @click="$refs.removePlaylistItemModal.style.display='none'" class="close">&times;</span>
-          <p>Playlist episode removed.</p>
+          <span @click="$refs.modal.style.display='none'" class="close">&times;</span>
+          <p>{{this.modalText}}</p>
         </div>
       </div>
     </div>
@@ -153,7 +87,8 @@ export default {
       loggedIn: "",
       subscribedPodcastIds: [],
       userInSession: "",
-      activeClass: "active"
+      activeClass: "active",
+      modalText: ""
     };
   },
   methods: {
@@ -161,25 +96,27 @@ export default {
       axios.post("/subscription", { name, rss_feed_url, podcast_id });
       this.getSubscribedPodcastIds();
       this.podcastName = name;
-      this.openModal(
-        this.$refs.subscriptionModal,
-        this.$refs.subscriptionModalContent
-      );
+      this.modalText = "You've subscribed to " + this.podcastName;
+      this.openModal();
     },
     getSubscribedPodcastIds() {
       axios.post("/test-user-subscribed").then(res => {
         this.subscribedPodcastIds = res.data.podcast_ids;
       });
     },
-    openModal(modal, modalContent) {
+    openModal() {
+      let modal = this.$refs.modal;
+      let modalContent = this.$refs.modalContent;
       modal.style.display = "block";
       setTimeout(function() {
-        modalContent.classList.add("animate-up");
+        modalContent.classList.add("animate-down");
         modal.classList.add("fade-out");
       }, 3000);
       setTimeout(function() {
         modal.style.display = "none";
       }, 3400);
+      modal.classList.remove("animate-down");
+      modal.classList.remove("fade-out");
     },
     disableSubscribeButton(podcastId) {
       return this.subscribedPodcastIds.includes(podcastId);
@@ -225,7 +162,8 @@ export default {
     logout() {
       axios.post("/logout");
       this.loggedIn = false;
-      this.openModal(this.$refs.logoutModal, this.$refs.logoutModalContent);
+      this.modalText = "You've been logged out"
+      this.openModal();
     },
     async testUserInSession() {
       this.userInSession = this.userInSession;

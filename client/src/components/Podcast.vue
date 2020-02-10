@@ -82,10 +82,8 @@ export default {
       this.addingToPlaylist = true;
       let playlistID = this.event.target.value;
       axios.post("/playlist_items", { playlist_id: playlistID, episode_title: this.episodeTitle, episode_description: this.episodeDescription, episode_url: this.episodeUrl })
-      .then(() => {
-        // this.$router.push("/playlists");
-      })
-      this.$parent.openModal(this.$parent.$refs.addPlaylistItemModal, this.$parent.$refs.addPlaylistItemModalContent);
+      this.$parent.modalText = "Episode added to playlist"
+      this.$parent.openModal();
     },
     testDuplicateHistoryEntry() {
       // before adding a new user to DB, make sure that username isn't already taken
