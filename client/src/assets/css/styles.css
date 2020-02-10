@@ -8,11 +8,34 @@ h1 {
   font-weight: 400;
   text-transform: uppercase;
 }
+#login-register-logout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
 img.logo {
   margin: 0 auto;
   display: block;
   width: 250px;
   max-width: 100%;
+}
+#episode-title-container {
+  display: flex;
+  flex-direction: row;
+}
+#episode-title {
+  width: 75%;
+  border-right: 1px solid black;
+}
+#add-to-playlist {
+  width: 25%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-item-align: center;
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
 }
 nav#nav-bar {
   display: flex;
@@ -31,9 +54,10 @@ nav .active,
   background-color: black;
 }
 nav button {
-  width: 25%;
+  width: 5em;
   position: center;
-  color: gray;
+  color: black;
+  margin: 0 5px;
 }
 img.icon {
   width: 75px;

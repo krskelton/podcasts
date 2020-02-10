@@ -1,27 +1,25 @@
 <template>
   <div class="episodes">
     <h2>{{ this.$parent.podcastName }}</h2>
-    <!--IDEA: add conditional so that subscribe button is disabled if you are already subscribed to that podcast-->
-    <!--IDEA: add message when the user clicks the subscribe button to let them know they are subscribed now.-->
     <button
       class="button"
       @click="sendToSubscribe()"
       :disabled="disableSubscribeButton(Number(this.$parent.podcastId))">
       Subscribe
     </button>
-    <ul v-if="!play">
-      <li
-        v-for="(episode, index) in episodeList"
-        v-bind:key="index"
-        @click="playEpisode(episode) + getParentPodcastData(episode)"
-      >
-        <div>
-          <h3>{{ episode.title }}</h3>
+      <ul v-if="!play">
+        <li id="episode-title-container" v-for="(episode, index) in episodeList" v-bind:key="index">
+          <div id="episode-title" @click="playEpisode(episode) + getParentPodcastData(episode)">
+            <h3>{{ episode.title }}</h3>
+          </div>
+          <div id="add-to-playlist">
             <select @change="dontPlay($event)" :value="null">
+              <option value="" selected disabled hidden>Add Episode to Playlist</option>
               <option v-for="playlist in userPlaylists" :value="playlist.id" :key="playlist.id">
                 {{ playlist.title }}
               </option>
             </select>
+            <br>
           <button @click="getEpisode(episode) + addToPlaylist()">Add to playlist</button>
         </div>
       </li>

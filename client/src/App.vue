@@ -1,13 +1,14 @@
 <template>
-  <div id="app" @click="$refs.subscriptionModal.style.display='none'">
-    <p>Logged in: {{ loggedIn }}</p>
-    <router-link to="/register">
-      <button class="Register">Register</button>
-    </router-link>
-    <router-link to="/login">
-      <button class="login">Login</button>
-    </router-link>
-    <button class="logout" @click="logout">Log Out</button>
+  <div id="app">
+    <nav id="login-register-logout">
+      <router-link to="/register">
+        <button class="Register">Register</button>
+      </router-link>
+      <router-link to="/login">
+        <button class="login">Login</button>
+      </router-link>
+      <button class="logout" @click="logout">Log Out</button>
+    </nav>
     <div class="modal" ref="subscriptionModal">
       <!-- Modal content -->
       <div class="modal-content" ref="subscriptionModalContent">
@@ -33,7 +34,7 @@
       <!-- Modal content -->
       <div class="modal-content" ref="registerModalContent">
         <div class="modal-body">
-          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <span @click="$refs.registerModal.style.display='none'" class="close">&times;</span>
           <p>Thanks for registering, {{ this.userInSession }}. You're logged in!</p>
         </div>
       </div>
@@ -42,7 +43,7 @@
       <!-- Modal content -->
       <div class="modal-content" ref="loginModalContent">
         <div class="modal-body">
-          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <span @click="$refs.loginModal.style.display='none'" class="close">&times;</span>
           <p>You're logged in, {{ this.userInSession }}.</p>
         </div>
       </div>
@@ -51,7 +52,7 @@
       <!-- Modal content -->
       <div class="modal-content" ref="createPlaylistModalContent">
         <div class="modal-body">
-          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <span @click="$refs.createPlaylistModal.style.display='none'" class="close">&times;</span>
           <p>Playlist created.</p>
         </div>
       </div>
@@ -60,7 +61,7 @@
       <!-- Modal content -->
       <div class="modal-content" ref="addPlaylistItemModalContent">
         <div class="modal-body">
-          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <span @click="$refs.addPlaylistItemModal.style.display='none'" class="close">&times;</span>
           <p>Episode added to playlist.</p>
         </div>
       </div>
@@ -69,7 +70,7 @@
       <!-- Modal content -->
       <div class="modal-content" ref="deletePlaylistModalContent">
         <div class="modal-body">
-          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <span @click="$refs.deletePlaylistModal.style.display='none'" class="close">&times;</span>
           <p>Playlist deleted.</p>
         </div>
       </div>
@@ -78,7 +79,7 @@
       <!-- Modal content -->
       <div class="modal-content" ref="removePlaylistItemModalContent">
         <div class="modal-body">
-          <span @click="$refs.logoutModal.style.display='none'" class="close">&times;</span>
+          <span @click="$refs.removePlaylistItemModal.style.display='none'" class="close">&times;</span>
           <p>Playlist episode removed.</p>
         </div>
       </div>
