@@ -146,11 +146,13 @@ export default {
               this.podcastId
             );
           }
+          if (isSubscribing === false) {
           this.viewThisPodcast(
             this.podcastName,
             this.podcastFeedURL,
             this.podcastId
           );
+          }
         });
     },
     viewThisPodcast(name, url, id) {

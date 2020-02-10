@@ -49,8 +49,13 @@
                 </ul> 
         </ul>
         <ol v-if="viewTopList">
-            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="sendFeed(topTenPodcast['im:name'].label, topTenPodcast.link.attributes.href, topTenPodcast)">{{topTenPodcast['im:name'].label}}
-                <button @click="subscribing = true" :disabled="disableSubscribeButton(topTenPodcast.id.attributes['im:id'])">Subscribe</button>
+            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index">
+                <div id="episode-title" @click="subscribing = false; sendFeed(topTenPodcast['im:name'].label, topTenPodcast.link.attributes.href, topTenPodcast)">
+                    {{topTenPodcast['im:name'].label}}
+                </div>
+                <div id="subscribe">
+                    <button @click="subscribing = true; sendFeed(topTenPodcast['im:name'].label, topTenPodcast.link.attributes.href, topTenPodcast)" :disabled="disableSubscribeButton(topTenPodcast.id.attributes['im:id'])">Subscribe</button>
+                </div>
             </li>
         </ol>
     </div>
