@@ -33,9 +33,9 @@
       <audio controls id="podcast-audio" @play="testDuplicateHistoryEntry()" @pause="registerPause()">
         <source :src="musicFile" type="audio/mpeg" />
       </audio>
-      <button class="button" style="margin: 20px auto;" @click="getRSSFeed(this.$parent.podcastFeedURL)">
+      <!-- <button class="button" style="margin: 20px auto;" @click="getRSSFeed(this.$parent.podcastFeedURL)">
         Return to episodes
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
