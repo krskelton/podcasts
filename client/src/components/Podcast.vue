@@ -33,9 +33,9 @@
       <audio controls id="podcast-audio" @play="testDuplicateHistoryEntry()" @pause="registerPause()">
         <source :src="musicFile" type="audio/mpeg" />
       </audio>
-      <button class="button" style="margin: 20px auto;" @click="getRSSFeed(this.$parent.podcastFeedURL)">
+      <!-- <button class="button" style="margin: 20px auto;" @click="getRSSFeed(this.$parent.podcastFeedURL)">
         Return to episodes
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
@@ -82,10 +82,8 @@ export default {
       this.addingToPlaylist = true;
       let playlistID = this.event.target.value;
       axios.post("/playlist_items", { playlist_id: playlistID, episode_title: this.episodeTitle, episode_description: this.episodeDescription, episode_url: this.episodeUrl })
-      .then(() => {
-        // this.$router.push("/playlists");
-      })
-      this.$parent.openModal(this.$parent.$refs.addPlaylistItemModal, this.$parent.$refs.addPlaylistItemModalContent);
+      this.$parent.modalText = "Episode added to playlist"
+      this.$parent.openModal();
     },
     testDuplicateHistoryEntry() {
       // before adding a new user to DB, make sure that username isn't already taken
@@ -169,7 +167,7 @@ export default {
           clearInterval(interval);
           this.trackPlaying = false;
         }
-      }, 5000)
+      }, 2000)
     }
   },
 

@@ -180,6 +180,11 @@ button.button:hover {
   animation-duration: 0.5s;
 }
 
+.animate-down {
+  animation-name: animatedown;
+  animation-duration: 0.5s;
+}
+
 @keyframes animatedown {
   from {
     top: -300px;
