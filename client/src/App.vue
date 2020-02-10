@@ -7,7 +7,9 @@
       <router-link to="/login">
         <button class="login">Login</button>
       </router-link>
-      <button class="logout" @click="logout">Log Out</button>
+      <span v-if="this.loggedIn == true">
+        <button class="logout" @click="logout">Log Out</button>
+      </span>
     </nav>
     <div class="modal" ref="subscriptionModal">
       <!-- Modal content -->
