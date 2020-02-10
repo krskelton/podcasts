@@ -6,8 +6,13 @@
             <button class="button" @click="searchForPodcast">Find Podcast</button>
         </div>
         <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
-            <li @click="sendFeedtoApp(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">{{searchResult.collectionName}}
-                <button @click="sendToSubscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)" :disabled="disableSubscribeButton(searchResult.collectionId)">Subscribe</button>
+            <li>
+                <div id="episode-title" @click="sendFeedtoApp(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">
+                    {{searchResult.collectionName}}
+                </div>
+                <div id="subscribe">
+                    <button @click="sendToSubscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)" :disabled="disableSubscribeButton(searchResult.collectionId)">Subscribe</button>
+                </div>
             </li>
         </ul>
     </div>
