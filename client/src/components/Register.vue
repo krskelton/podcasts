@@ -1,7 +1,11 @@
 <template>
-  <div class="register-component">
+  <div v-if="this.$parent.loggedIn"> 
+  <!-- if the user is already logged in, tell them -->
+    <h1>You're already logged in.</h1>
+  </div>
+  <div v-else class="register-component">
     <!-- if a user isn't currently logged in, allow them to register -->
-    <h1>Register</h1>
+    <h1>Register</h1><br>
     <p>Username:</p>
     <input v-model="username" type="text" @keyup.enter="testDuplicateUser()" />
     <p>Password:</p>
