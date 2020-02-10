@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @click="$refs.subscriptionModal.style.display='none'">
+  <div id="app">
     <nav id="login-register-logout">
       <router-link to="/register">
         <button class="Register">Register</button>
