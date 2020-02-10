@@ -1,20 +1,17 @@
 <template>
-  <div class="login-contents">
-    <div class="centered">
-      <div v-if="!this.$parent.loggedIn">
-      <!-- if there's not currently a user logged in, allow them to log in -->
-        <h1>Login</h1>
-        <p>Username:</p><input v-model="username" @keyup.enter="login()" type="text" />
-        <p>Password:</p><input type="password" v-model="password" @keyup.enter="login()"/>
-        <br><br>
-        <button @click="login()">Submit</button>
-        <div class="error">{{ error }}</div>
-      </div>
-      <div v-if="this.$parent.loggedIn"> 
-      <!-- if the user is already logged in, tell them -->
-        <h1>You're already logged in.</h1>
-      </div>
-    </div>
+  <div v-if="this.$parent.loggedIn"> 
+  <!-- if the user is already logged in, tell them -->
+    <h1>You're already logged in.</h1>
+  </div>
+  <div v-else class="login-contents">
+  <!-- if there's not currently a user logged in, allow them to log in -->
+    <h1>Login</h1>
+    <p>Username:</p>
+    <input v-model="username" @keyup.enter="login()" type="text" />
+    <p>Password:</p><input type="password" v-model="password" @keyup.enter="login()"/>
+    <br><br>
+    <button @click="login()">Submit</button>
+    <div class="error">{{ error }}</div>
   </div>
 </template>
 
@@ -48,7 +45,9 @@ export default {
           this.username = '';
           this.password = '';
           this.$parent.loggedIn = true;
-          this.$parent.openModal(this.$parent.$refs.loginModal, this.$parent.$refs.loginModalContent);
+          this.$parent.modalText = "Welcome back, " + this.$parent.userInSession;
+          this.$parent.openModal();
+          this.$router.push('/subscriptions');
         }
       });
     }
@@ -59,10 +58,6 @@ export default {
 <style scoped>
 .login-contents {
   padding-top: 20px;
-  display: flex;
-}
-.centered {
-  justify-content: center;
 }
 .error {
   font-weight: bold;
