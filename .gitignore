@@ -1,4 +1,5 @@
 client/node_modules
 server/dist
 server/.env
-db/*
+db
+server/.vscode

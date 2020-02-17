@@ -49,20 +49,26 @@
                 </ul> 
         </ul>
         <ol v-if="viewTopList">
-            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label)">{{topTenPodcast['im:name'].label}}</li>
+            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label)">{{topTenPodcast['im:name'].label}}
+                <button @click="subscribing = true">Subscribe</button>
+            </li>
         </ol>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+
+import { browseBus } from '../main'
+
 export default {
     name: 'Browse',
     data() {
         return{
             topTenPodcasts: [], 
             podcastFeedUrl: '',
-            viewTopList: false
+            viewTopList: false,
+            subscribing: false
         }        
     },
     methods: {
@@ -83,8 +89,7 @@ export default {
             axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
             .then((data) => {
                 this.podcastFeedUrl = data.data.results[0].feedUrl;
-                //this.$emit sends the data to parent component
-                this.$emit('feedFromBrowse', this.podcastFeedUrl, name);
+                browseBus.$emit('feedFromBrowse', this.podcastFeedUrl, name, podID, this.subscribing);
             })
         }
     }

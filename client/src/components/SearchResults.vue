@@ -2,17 +2,20 @@
     <div class="search-results">
         <h2>Find Podcast</h2>
         <div class="search">
-            <input v-model="searchTerm"/>
+            <input v-model="searchTerm" @keyup.enter="searchForPodcast"/>
             <button class="button" @click="searchForPodcast">Find Podcast</button>
         </div>
-        <ul>
-            <li v-for="(searchResult, index) in searchResults" v-bind:key="index" @click="sendFeedtoParent(searchResult.feedUrl, searchResult.collectionName)">{{searchResult.collectionName}}</li>
+        <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
+            <li @click="sendFeedtoApp(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">{{searchResult.collectionName}}
+                <button @click="subscribe(searchResult.feedUrl, searchResult.collectionName, searchResult.collectionId)">Subscribe</button>
+            </li>
         </ul>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { searchBus } from '../main'
 
 export default {
     name: 'SearchResults',
@@ -20,6 +23,7 @@ export default {
         return {
             searchTerm: '',
             searchResults: [],
+            subscribing: false
         }
     },
     methods: {
@@ -27,13 +31,23 @@ export default {
         searchForPodcast(){
             axios.get('https://itunes.apple.com/search?term=' + this.searchTerm + '&country=US&media=podcast')
             .then((data) => {
+                console.log(data)
                 this.searchResults = data.data.results;
             })
         },
-        //this.$emit sends the data to parent component
-        sendFeedtoParent(url, name){
-            this.$emit('feedFromSearch', url, name);
-        }
+        subscribe(url, name, podcast_id) {
+            this.subscribing = true;
+            this.sendFeedtoApp(url, name, podcast_id)
+        },
+        sendFeedtoApp(url, name, podcast_id){
+            let isSubscribing = this.subscribing
+            searchBus.$emit('feedFromSearch', url, name, podcast_id, isSubscribing)
+            this.subscribing = false
+        },
+
+    },
+    created() {
+        
     }
 }
 </script>
