@@ -102,6 +102,7 @@ export default {
     getSubscribedPodcastIds() {
       axios.post("/test-user-subscribed").then(res => {
         this.subscribedPodcastIds = res.data.podcast_ids;
+        console.log("getSubscribedPodcastIds ", this.subscribedPodcastIds)
       });
     },
     openModal() {

@@ -11,7 +11,7 @@
                     {{searchResult.collectionName}}
                 </div>
                 <div id="subscribe">
-                    <button @click="sendToSubscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)" :disabled="disableSubscribeButton(searchResult.collectionId)">Subscribe</button>
+                    <button @click="sendToSubscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)" @change="disableSubscribeButton(searchResult.collectionId)" :disabled="disableSubscribeButton(searchResult.collectionId)">Subscribe</button>
                 </div>
             </li>
         </ul>

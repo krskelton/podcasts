@@ -54,7 +54,7 @@
                     {{topTenPodcast['im:name'].label}}
                 </div>
                 <div id="subscribe">
-                    <button @click="subscribing = true; sendFeed(topTenPodcast['im:name'].label, topTenPodcast.link.attributes.href, topTenPodcast)" :disabled="disableSubscribeButton(topTenPodcast.id.attributes['im:id'])">Subscribe</button>
+                    <button @click="subscribing = true; sendFeed(topTenPodcast['im:name'].label, topTenPodcast.link.attributes.href, topTenPodcast)" :disabled="disableSubscribeButton(topTenPodcast.id.attributes['im:id'])">{{ disableSubscribeButton(topTenPodcast.id.attributes['im:id']) }} Subscribe</button>
                 </div>
             </li>
         </ol>
@@ -74,6 +74,7 @@ export default {
             podcastFeedUrl: '',
             viewTopList: false,
             subscribing: false,
+            isDisabled: false
         }        
     },
     methods: {
@@ -86,6 +87,7 @@ export default {
             })
         },
         disableSubscribeButton(podcastId){
+            console.log("test ", podcastId, this.$parent.disableSubscribeButton(Number(podcastId)));
             return this.$parent.disableSubscribeButton(Number(podcastId));
         },
         sendFeed(name, url) {
