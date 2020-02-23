@@ -2,17 +2,20 @@
     <div class="search-results">
         <h2>Find Podcast</h2>
         <div class="search">
-            <input v-model="searchTerm"/>
+            <input v-model="searchTerm" @keyup.enter="searchForPodcast"/>
             <button class="button" @click="searchForPodcast">Find Podcast</button>
         </div>
-        <ul>
-            <li v-for="(searchResult, index) in searchResults" v-bind:key="index" @click="sendFeedtoParent(searchResult.feedUrl, searchResult.collectionName)">{{searchResult.collectionName}}</li>
+        <ul v-for="(searchResult, index) in searchResults" v-bind:key="index">
+            <li @click="sendFeedtoApp(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)">{{searchResult.collectionName}}
+                <button @click="sendToSubscribe(searchResult.collectionName, searchResult.feedUrl, searchResult.collectionId)" :disabled="disableSubscribeButton(searchResult.collectionId)">Subscribe</button>
+            </li>
         </ul>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { searchBus } from '../main'
 
 export default {
     name: 'SearchResults',
@@ -20,22 +23,32 @@ export default {
         return {
             searchTerm: '',
             searchResults: [],
+            isSubscribing: false,
         }
     },
     methods: {
         //searchForPodcast adds the searchTerm from the user to make a call to the itunes api. The data from this response is capped at 50 responses. This can be changed by setting the parameter in the itunes url though.
         searchForPodcast(){
-            axios.get('https://itunes.apple.com/search?term=' + this.searchTerm + '&country=US&media=podcast')
+            let searchUrl = 'https://itunes.apple.com/search?term=' + this.searchTerm + '&country=US&media=podcast'
+            axios.get("https://cors-anywhere.herokuapp.com/" + searchUrl)
             .then((data) => {
                 this.searchResults = data.data.results;
             })
         },
-        //this.$emit sends the data to parent component
-        sendFeedtoParent(url, name){
-            this.$emit('feedFromSearch', url, name);
+        disableSubscribeButton(podcastId){
+            return this.$parent.disableSubscribeButton(podcastId);
+        },
+        sendToSubscribe(name, url, podcast_id) {
+            this.isSubscribing = true;
+            this.sendFeedtoApp(name, url, podcast_id);
+        },
+        sendFeedtoApp(name, url, podcast_id){
+            searchBus.$emit('feedFromSearch', name, url, podcast_id, this.isSubscribing)
+            this.isSubscribing = false
         }
     }
 }
+
 </script>
 
 <style>
