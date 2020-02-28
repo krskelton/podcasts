@@ -49,20 +49,26 @@
                 </ul> 
         </ul>
         <ol v-if="viewTopList">
-            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="getRSS(topTenPodcast.link.attributes.href, topTenPodcast['im:name'].label)">{{topTenPodcast['im:name'].label}}</li>
+            <li v-for="(topTenPodcast, index) in topTenPodcasts" v-bind:key="index" @click="sendFeed(topTenPodcast['im:name'].label, topTenPodcast.link.attributes.href, topTenPodcast)">{{topTenPodcast['im:name'].label}}
+                <button @click="subscribing = true" :disabled="disableSubscribeButton(topTenPodcast.id.attributes['im:id'])">Subscribe</button>
+            </li>
         </ol>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+
+import { browseBus } from '../main'
+
 export default {
     name: 'Browse',
     data() {
         return{
             topTenPodcasts: [], 
             podcastFeedUrl: '',
-            viewTopList: false
+            viewTopList: false,
+            subscribing: false,
         }        
     },
     methods: {
@@ -74,18 +80,11 @@ export default {
                 this.viewTopList = true;
             })
         },
-        //Since the json data in the above response does not return a feedUrl as a variable, the id needs to be parsed out of the url and sent to a different itunes api call that will return the feedUrl. The feedUrl is important because it's what returns the list of episodes.
-        getRSS(url, name){
-            var match = url.match(/id(\d+)/)
-            if (match) var podID = match[1];
-            else var podID = url.match(/\d+/);
-
-            axios.get('https://jsonp.afeld.me/?url=' + 'https://itunes.apple.com/lookup?id=' + podID + '&entity=podcast')
-            .then((data) => {
-                this.podcastFeedUrl = data.data.results[0].feedUrl;
-                //this.$emit sends the data to parent component
-                this.$emit('feedFromBrowse', this.podcastFeedUrl, name);
-            })
+        disableSubscribeButton(podcastId){
+            return this.$parent.disableSubscribeButton(Number(podcastId));
+        },
+        sendFeed(name, url) {
+            browseBus.$emit('feedFromBrowse', name, url, this.subscribing, this.addingToPlaylist);
         }
     }
 }

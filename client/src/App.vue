@@ -1,97 +1,230 @@
 <template>
   <div id="app">
-    <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg">
-    <h1>Podcasts</h1>
-    <nav>
-      <button @click="showSubscriptions"><img class="icon" src="./assets/images/my-list.png"/></button>
-      <button @click="showSearch"><img class="icon" src="./assets/images/search.png"/></button>
-      <button @click="showBrowse"><img class="icon" src="./assets/images/browse.png"/></button>
+    <nav id="login-register-logout">
+      <router-link to="/register">
+        <button class="Register">Register</button>
+      </router-link>
+      <router-link to="/login">
+        <button class="login">Login</button>
+      </router-link>
+      <span v-if="this.loggedIn == true">
+        <button class="logout" @click="logout">Log Out</button>
+      </span>
     </nav>
-    <div id="content">
-      <!--If the parent receives data from the child it will have @feedfrom[nameofchild]. This is passing the podcast name and feed url to the parent so the parent can pass it to the podcast.vue child component since child components can't pass data directly to each other.-->
-      <Subscriptions v-if="viewSubscriptions" @feedFromSubscription="subscriptionFeedRecieved"/>
-      <SearchResults v-if="viewSearch" @feedFromSearch="searchFeedRecieved"/>
-      <Browse v-if="viewBrowse" @feedFromBrowse="browseFeedRecieved"/>
-      <Podcast v-if="viewPodcast" :podcastName="podcastName" :feedURL="podcastFeedURL" />
+    <div class="modal" ref="modal">
+      <!-- Modal content -->
+      <div class="modal-content" ref="modalContent">
+        <div class="modal-body">
+          <span @click="$refs.modal.style.display='none'" class="close">&times;</span>
+          <p>{{this.modalText}}</p>
+        </div>
+      </div>
     </div>
+
+    <img alt="logo" class="logo" src="./assets/images/podcast-icon-small.jpg" />
+    <router-view></router-view>
+    <nav id="nav-bar">
+      <router-link to="/subscriptions" class="nav-item">
+        <img
+          class="icon"
+          :class="[currentPage.includes('subscriptions') ? activeClass : '', 'nav-item']"
+          src="./assets/images/my-list.png"
+        />
+      </router-link>
+
+      <router-link to="/searchresults" class="nav-item">
+        <img
+          class="icon"
+          :class="[currentPage.includes('searchresults') ? activeClass : '', 'nav-item']"
+          src="./assets/images/search.png"
+        />
+      </router-link>
+
+      <router-link to="/browse">
+        <img
+          class="icon"
+          :class="[currentPage.includes('browse') ? activeClass : '', 'nav-item']"
+          src="./assets/images/browse.png"
+        />
+      </router-link>
+      <router-link to="/history">
+        <img
+          class="icon"
+          :class="[currentPage.includes('history') ? activeClass : '', 'nav-item']"
+          src="./assets/images/my_history_gray.png"
+        />
+      </router-link>
+      <router-link to="/playlists">
+        <img
+          class="icon"
+          :class="[currentPage.includes('playlists') ? activeClass : '', 'nav-item']"
+          src="./assets/images/playlist.png"
+        />
+      </router-link>
+    </nav>
   </div>
 </template>
 
-
 <script>
-import Subscriptions from './components/Subscriptions.vue'
-import SearchResults from './components/SearchResults.vue'
-import Browse from './components/Browse.vue'
-import Podcast from './components/Podcast.vue'
+import axios from "axios";
+
+import { searchBus, browseBus, podcastBus, subscriptionBus } from "./main";
 
 export default {
-  name: 'app',
+  name: "app",
   data() {
-    return{
-      viewSubscriptions: false,
-      viewSearch: false,
-      viewBrowse: false,
-      viewPodcast: false,
-
-      podcastName: '',
-      podcastFeedURL: '',
-    }
+    return {
+      episodeList: [],
+      podcastName: "",
+      podcastFeedURL: "",
+      podcastAPIid: "",
+      episodeTitle: "",
+      episodeDescription: "",
+      episodeUrl: "",
+      episodeDisplayed: "",
+      timeDateAccessed: "",
+      podcastId: "",
+      loggedIn: "",
+      subscribedPodcastIds: [],
+      userInSession: "",
+      activeClass: "active",
+      modalText: ""
+    };
   },
   methods: {
-    //The feedRecieved methods get the feed url and podcast name from the SearchResults, Browse and Subscription components. They set the podcastName and podcastFeedURL from the data() above so that app.vue can pass those variables to podcast.vue.
-    searchFeedRecieved(feedurl, podcastname){
-        this.podcastName = podcastname;
-        this.podcastFeedURL = feedurl;
-        this.viewSearch = false;
-        this.viewPodcast = true;
+    subscribeToPodcast(name, rss_feed_url, podcast_id) {
+      axios.post("/subscription", { name, rss_feed_url, podcast_id });
+      this.getSubscribedPodcastIds();
+      this.podcastName = name;
+      this.modalText = "You've subscribed to " + this.podcastName;
+      this.openModal();
     },
-    browseFeedRecieved(feedurl2, podcastname2){
-        this.podcastName = podcastname2;
-        this.podcastFeedURL = feedurl2;
-        this.viewBrowse = false;
-        this.viewPodcast = true;
+    getSubscribedPodcastIds() {
+      axios.post("/test-user-subscribed").then(res => {
+        this.subscribedPodcastIds = res.data.podcast_ids;
+      });
     },
-    subscriptionFeedRecieved(feedurl3, podcastname3){
-        this.podcastName = podcastname3;
-        this.podcastFeedURL = feedurl3;
-        this.viewSubscriptions = false;
-        this.viewPodcast = true;
+    openModal() {
+      let modal = this.$refs.modal;
+      let modalContent = this.$refs.modalContent;
+      modal.style.display = "block";
+      setTimeout(function() {
+        modalContent.classList.add("animate-down");
+        modal.classList.add("fade-out");
+      }, 3000);
+      setTimeout(function() {
+        modal.style.display = "none";
+      }, 3400);
+      modal.classList.remove("animate-down");
+      modal.classList.remove("fade-out");
     },
-    //The methods below simply show components and hide others when the user clicks on elements of the page.
-    showSubscriptions(){
-      this.viewSubscriptions = true;
-      this.viewSearch = false;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
+    disableSubscribeButton(podcastId) {
+      return this.subscribedPodcastIds.includes(podcastId);
     },
-    showSearch(){
-      this.viewSubscriptions = false;
-      this.viewSearch = true;
-      this.viewBrowse = false;
-      this.viewPodcast = false;
-      
+    getRSS(name, url, isSubscribing) {
+      var match = url.match(/id(\d+)/);
+      if (match) var podID = match[1];
+      else podID = url.match(/\d+/);
+
+      axios
+        .get(
+          "https://jsonp.afeld.me/?url=" +
+            "https://itunes.apple.com/lookup?id=" +
+            podID +
+            "&entity=podcast"
+        )
+        .then(data => {
+          this.podcastFeedUrl = data.data.results[0].feedUrl;
+          this.podcastId = podID;
+          this.podcastName = name;
+          this.podcastFeedURL = this.podcastFeedUrl;
+          // browseBus.$emit('feedFromBrowse', name, this.podcastFeedUrl, podID, this.subscribing);
+          if (isSubscribing === true) {
+            this.subscribeToPodcast(
+              this.podcastName,
+              this.podcastFeedURL,
+              this.podcastId
+            );
+          }
+          this.viewThisPodcast(
+            this.podcastName,
+            this.podcastFeedURL,
+            this.podcastId
+          );
+        });
     },
-    showBrowse(){
-      this.viewSubscriptions = false;
-      this.viewSearch = false;
-      this.viewBrowse = true;
-      this.viewPodcast = false;
+    viewThisPodcast(name, url, id) {
+      this.podcastName = name;
+      this.podcastFeedURL = url;
+      this.podcastId = id;
+      this.$router.push("/podcast");
+    },
+    logout() {
+      axios.post("/logout");
+      this.loggedIn = false;
+      this.modalText = "You've been logged out"
+      this.openModal();
+    },
+    async testUserInSession() {
+      this.userInSession = this.userInSession;
+      /* hits backend and checks to see if a user is in session - adjusts this.loggedIn accordingly
+      this ensures that the correct navbar buttons are displayed at all times */
+      let promise = axios.post("/users").then(resp => {
+        if (resp.data.success == false) {
+          this.loggedIn = false;
+          return false;
+        }
+        this.userInSession = resp.data.userInSession;
+        this.loggedIn = true;
+        return true;
+      });
+      // these lines ensure that the promise resolves before adjusting the value of this.loggedIn (accounts for asynch)
+      let result = await promise;
+      return result;
     }
   },
-  components: {
-    Subscriptions,
-    Browse,
-    SearchResults, 
-    Podcast
+  created() {
+    podcastBus.$on("feedFromPodcast", () => {
+      this.subscribeToPodcast(
+        this.podcastName,
+        this.podcastFeedURL,
+        this.podcastId
+      );
+    }),
+      subscriptionBus.$on("feedFromSubscription", (name, url, podcast_id) => {
+        this.viewThisPodcast(name, url, podcast_id);
+      }),
+      searchBus.$on(
+        "feedFromSearch",
+        (name, url, podcast_id, isSubscribing) => {
+          if (isSubscribing === true) {
+            this.subscribeToPodcast(name, url, podcast_id);
+            return;
+          }
+          this.viewThisPodcast(name, url, podcast_id);
+        }
+      ),
+      browseBus.$on("feedFromBrowse", (name, url, isSubscribing) => {
+        this.getRSS(name, url, isSubscribing);
+      });
+  },
+  computed: {
+    currentPage() {
+      return this.$route.path;
+    }
+  },
+  mounted() {
+    this.testUserInSession();
+    this.getSubscribedPodcastIds();
   }
-  
-}
+};
 </script>
 
 <style lang="css">
-  /* import the google font and external stylesheet */
-  @import url(https://fonts.googleapis.com/css?family=Raleway:400,600&display=swap);
-  @import './assets/css/styles.css';
+/* import the google font and external stylesheet */
+@import url(
+  https://fonts.googleapis.com/css?family=Raleway:400,
+  600&display=swap
+);
+@import "./assets/css/styles.css";
 </style>
-
-
