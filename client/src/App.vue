@@ -102,7 +102,6 @@ export default {
     getSubscribedPodcastIds() {
       axios.post("/test-user-subscribed").then(res => {
         this.subscribedPodcastIds = res.data.podcast_ids;
-        console.log("getSubscribedPodcastIds ", this.subscribedPodcastIds)
       });
     },
     openModal() {
@@ -148,11 +147,11 @@ export default {
             );
           }
           if (isSubscribing === false) {
-          this.viewThisPodcast(
-            this.podcastName,
-            this.podcastFeedURL,
-            this.podcastId
-          );
+            this.viewThisPodcast(
+              this.podcastName,
+              this.podcastFeedURL,
+              this.podcastId
+            );
           }
         });
     },
@@ -165,7 +164,7 @@ export default {
     logout() {
       axios.post("/logout");
       this.loggedIn = false;
-      this.modalText = "You've been logged out"
+      this.modalText = "You've been logged out";
       this.openModal();
     },
     async testUserInSession() {

@@ -13,7 +13,6 @@
         <br />
         <br />
         <span class="col2-timestamp">{{ item.time_stamp_accessed}}</span>
-        <!-- need to make 2 columns to stack the data in mobile view -->
       </li>
     </ul>
   </div>

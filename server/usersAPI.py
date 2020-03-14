@@ -11,7 +11,8 @@ def test_duplicate_user():
     # return either a current user object (in the case that a username already exists),
     # or an empty array (if a username hasn't been taken yet)
     username = request.json["username"]
-    user_in_db = db.session.query(Users).filter(Users.username == username).all()
+    username.lower()
+    user_in_db = db.session.query(Users).filter(Users.username == username.lower()).all()
     user_in_db_results = [{"id": user.id, "user_username": user.username} for user in user_in_db]
     return jsonify({"does_the_user_exist": user_in_db_results})
 
@@ -22,6 +23,7 @@ def add_user():
     # add a new user to the User Table in DB
     new_user = Users()
     new_user.username = request.json["username"]
+    username.lower()
     plain_text_password = request.json["password"]
     salt = make_salt()
     # save unique salts in the db with each user
@@ -38,9 +40,10 @@ def add_user():
 @users_api.route('/login', methods=["POST"])
 def login():
     username = request.json['username']
+    username.lower()
     password = request.json['password']
     # query the database with the provided username
-    user = Users.query.filter_by(username=username).one_or_none()
+    user = Users.query.filter_by(username=username.lower()).one_or_none()
     # if the response is 'None', the username entered isn't valid
     if user == None:
         return 'None'
